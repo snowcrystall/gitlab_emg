@@ -1,0 +1,9 @@
+.sub-section
+  %h4.danger-title= _('Remove group')
+  = form_tag(group, method: :delete) do
+    %p
+      = _('Removing this group also removes all child projects, including archived projects, and their resources.')
+      %br
+      %strong= _('Removed group can not be restored!')
+
+    = render 'groups/settings/remove_button', group: group

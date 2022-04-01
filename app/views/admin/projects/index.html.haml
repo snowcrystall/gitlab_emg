@@ -1,0 +1,37 @@
+- page_title _('Projects')
+- params[:visibility_level] ||= []
+
+.top-area.scrolling-tabs-container.inner-page-scroll-tabs
+  %ul.nav-links.nav.nav-tabs
+    - opts = params[:visibility_level].present? ? {} : { page: admin_projects_path }
+    = nav_link(opts) do
+      = link_to _('All'), admin_projects_path
+
+    = nav_link(html_options: { class: active_when(params[:visibility_level] == Gitlab::VisibilityLevel::PRIVATE.to_s) }) do
+      = link_to _('Private'), admin_projects_path(visibility_level: Gitlab::VisibilityLevel::PRIVATE)
+    = nav_link(html_options: { class: active_when(params[:visibility_level] == Gitlab::VisibilityLevel::INTERNAL.to_s) }) do
+      = link_to _('Internal'), admin_projects_path(visibility_level: Gitlab::VisibilityLevel::INTERNAL)
+    = nav_link(html_options: { class: active_when(params[:visibility_level] == Gitlab::VisibilityLevel::PUBLIC.to_s) }) do
+      = link_to _('Public'), admin_projects_path(visibility_level: Gitlab::VisibilityLevel::PUBLIC)
+
+  .nav-controls
+    .search-holder
+      = render 'shared/projects/search_form', autofocus: true, admin_view: true
+      .dropdown
+        - toggle_text = _('Namespace')
+        - if params[:namespace_id].present?
+          = hidden_field_tag :namespace_id, params[:namespace_id]
+          - namespace = Namespace.find(params[:namespace_id])
+          - toggle_text = "#{namespace.kind}: #{namespace.full_path}"
+        = dropdown_toggle(toggle_text, { toggle: 'dropdown', is_filter: 'true' }, { toggle_class: 'js-namespace-select large' })
+        .dropdown-menu.dropdown-select.dropdown-menu-right
+          = dropdown_title(_('Namespaces'))
+          = dropdown_filter(_("Search for Namespace"))
+          = dropdown_content
+          = dropdown_loading
+      = render 'shared/projects/dropdown'
+      = link_to new_project_path, class: 'gl-button btn btn-confirm' do
+        = _('New Project')
+      = button_tag _("Search"), class: "gl-button btn btn-confirm btn-search hide"
+
+= render 'projects'

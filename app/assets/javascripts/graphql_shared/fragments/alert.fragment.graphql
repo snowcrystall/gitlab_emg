@@ -1,0 +1,14 @@
+fragment AlertListItem on AlertManagementAlert {
+  iid
+  title
+  severity
+  status
+  startedAt
+  eventCount
+  issue {
+    iid
+    state
+    title
+    webUrl
+  }
+}

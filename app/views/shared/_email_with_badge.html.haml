@@ -1,0 +1,8 @@
+- css_classes = %w(badge gl-badge)
+- css_classes << (verified ? 'badge-success': 'badge-danger')
+- text = verified ? _('Verified') : _('Unverified')
+
+.email-badge
+  .email-badge-email= email
+  %div{ class: css_classes }
+    = text

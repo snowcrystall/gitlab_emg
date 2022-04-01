@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd $(dirname $0)/.. || exit 1
+
+if [ -n "$SIDEKIQ_WORKERS" ] ; then
+  exec bin/background_jobs_sk_cluster "$@"
+else
+  exec bin/background_jobs_sk "$@"
+fi

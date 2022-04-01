@@ -1,0 +1,10 @@
+/app/assets/javascripts/locale/**/app.js
+/builds/
+/coverage/
+/coverage-frontend/
+/coverage-javascript/
+/node_modules/
+/public/
+/tmp/
+/vendor/
+/sitespeed-result/

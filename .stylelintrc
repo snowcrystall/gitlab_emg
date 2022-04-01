@@ -1,0 +1,38 @@
+{
+   "extends": ["@gitlab/stylelint-config"],
+   "ignoreFiles": [
+     "app/assets/stylesheets/pages/emojis.scss",
+     "app/assets/stylesheets/startup/startup-*.scss",
+     "ee/app/assets/stylesheets/startup/startup-*.scss",
+     "app/assets/stylesheets/lazy_bundles/select2.scss",
+     "app/assets/stylesheets/highlight/themes/*.scss",
+     "app/assets/stylesheets/lazy_bundles/cropper.css"
+   ],
+   "plugins":[
+      "./scripts/frontend/stylelint/stylelint-duplicate-selectors.js",
+      "./scripts/frontend/stylelint/stylelint-utility-classes.js",
+   ],
+   "rules":{
+      "max-nesting-depth": [
+         3,
+         {
+            "ignoreAtRules":[
+               "each",
+               "media",
+               "supports",
+               "include"
+            ],
+            "severity":"warning"
+         }
+      ],
+      "selector-max-compound-selectors":[3, { "severity": "warning" }],
+      "stylelint-gitlab/utility-classes":[true,{ "severity": "warning" }],
+      "declaration-block-no-duplicate-properties": [
+        true,
+        {
+          "ignore": ["consecutive-duplicates"]
+        }
+      ],
+      "no-eol-whitespace": true,
+   }
+}

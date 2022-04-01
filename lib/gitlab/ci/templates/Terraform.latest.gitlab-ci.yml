@@ -1,0 +1,35 @@
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Terraform.latest.gitlab-ci.yml
+
+include:
+  - template: Terraform/Base.latest.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Terraform/Base.latest.gitlab-ci.yml
+
+stages:
+  - init
+  - validate
+  - build
+  - deploy
+  - cleanup
+
+init:
+  extends: .terraform:init
+
+validate:
+  extends: .terraform:validate
+
+build:
+  extends: .terraform:build
+
+deploy:
+  extends: .terraform:deploy
+  dependencies:
+    - build
+  environment:
+    name: $TF_STATE_NAME
+
+cleanup:
+  extends: .terraform:destroy
+  dependencies:
+    - deploy

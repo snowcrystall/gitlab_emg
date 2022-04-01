@@ -1,0 +1,9 @@
+mutation($projectPath: ID!, $iid: String!, $healthStatus: HealthStatus) {
+  updateIssue(input: { projectPath: $projectPath, iid: $iid, healthStatus: $healthStatus }) {
+    issuable: issue {
+      id
+      healthStatus
+    }
+    errors
+  }
+}
