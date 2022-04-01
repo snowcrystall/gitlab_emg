@@ -75,6 +75,15 @@ func NewSmartHTTPClient(ctx context.Context, server Server) (context.Context, *S
 	return withOutgoingMetadata(ctx, server.Features), &SmartHTTPClient{grpcClient}, nil
 }
 
+func NewOperationServiceClient(ctx context.Context, server Server) (context.Context, *OperationServiceClient, error) {
+	conn, err := getOrCreateConnection(server)
+	if err != nil {
+		return nil, nil, err
+	}
+	grpcClient := gitalypb.NewOperationServiceClient(conn)
+	return withOutgoingMetadata(ctx, server.Features), &OperationServiceClient{grpcClient}, nil
+}
+
 func NewBlobClient(ctx context.Context, server Server) (context.Context, *BlobClient, error) {
 	conn, err := getOrCreateConnection(server)
 	if err != nil {

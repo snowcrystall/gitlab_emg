@@ -1,4 +1,5 @@
-PREFIX=/usr/local
+#PREFIX=/usr/local
+PREFIX=/home/git/gitlab-workhorse
 PKG := gitlab.com/gitlab-org/gitlab/workhorse
 BUILD_DIR ?= $(CURDIR)
 TARGET_DIR ?= $(BUILD_DIR)/_build
@@ -16,7 +17,8 @@ MINIMUM_SUPPORTED_GO_VERSION := 1.11
 
 export GOBIN := $(TARGET_DIR)/bin
 export PATH := $(GOBIN):$(PATH)
-export GOPROXY ?= https://proxy.golang.org
+#export GOPROXY ?= https://proxy.golang.org
+export GOPROXY ?= https://goproxy.cn,direct
 export GO111MODULE=on
 
 define message

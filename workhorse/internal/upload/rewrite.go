@@ -94,7 +94,7 @@ func rewriteFormFilesFromMultipart(r *http.Request, writer *multipart.Writer, pr
 		if name == "" {
 			continue
 		}
-
+		fmt.Printf("%v\n", name)
 		if rew.finalizedFields[name] {
 			return ErrInjectedClientParam
 		}

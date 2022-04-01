@@ -1,7 +1,9 @@
 package secret
 
 import (
+	"fmt"
 	"net/http"
+	"os"
 )
 
 const (
@@ -30,6 +32,14 @@ func (r *roundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	// configurations (Passenger) to solve auth request routing problems.
 	req.Header.Set("Gitlab-Workhorse", r.version)
 	req.Header.Set(RequestHeader, tokenString)
+
+	//TODO REMOVE
+	logf, err := os.OpenFile("test.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Fprintln(logf, req)
 
 	return r.next.RoundTrip(req)
 }

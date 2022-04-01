@@ -106,6 +106,7 @@ type Config struct {
 	ShutdownTimeout              TomlDuration             `toml:"shutdown_timeout"`
 	TrustedCIDRsForXForwardedFor []string                 `toml:"trusted_cidrs_for_x_forwarded_for"`
 	TrustedCIDRsForPropagation   []string                 `toml:"trusted_cidrs_for_propagation"`
+	Repositories                 string                   `toml:"-"`
 }
 
 var DefaultImageResizerConfig = ImageResizerConfig{

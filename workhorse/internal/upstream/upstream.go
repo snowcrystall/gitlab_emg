@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"os"
 	"sync"
-	"time"
 
 	"net/http"
 	"net/url"
@@ -36,7 +35,6 @@ var (
 	requestHeaderBlacklist = []string{
 		upload.RewrittenFieldsHeader,
 	}
-	geoProxyApiPollingInterval = 10 * time.Second
 )
 
 type upstream struct {
@@ -50,7 +48,6 @@ type upstream struct {
 	geoLocalRoutes        []routeEntry
 	geoProxyCableRoute    routeEntry
 	geoProxyRoute         routeEntry
-	geoProxyTestChannel   chan struct{}
 	accessLogger          *logrus.Logger
 	enableGeoProxyFeature bool
 	mu                    sync.RWMutex
@@ -64,9 +61,6 @@ func newUpstream(cfg config.Config, accessLogger *logrus.Logger, routesCallback 
 	up := upstream{
 		Config:       cfg,
 		accessLogger: accessLogger,
-		// Kind of a feature flag. See https://gitlab.com/groups/gitlab-org/-/epics/5914#note_564974130
-		enableGeoProxyFeature: os.Getenv("GEO_SECONDARY_PROXY") == "1",
-		geoProxyBackend:       &url.URL{},
 	}
 	if up.Backend == nil {
 		up.Backend = DefaultBackend
@@ -85,12 +79,9 @@ func newUpstream(cfg config.Config, accessLogger *logrus.Logger, routesCallback 
 		up.Version,
 		up.RoundTripper,
 	)
-
+	// Kind of a feature flag. See https://gitlab.com/groups/gitlab-org/-/epics/5914#note_564974130
+	up.enableGeoProxyFeature = os.Getenv("GEO_SECONDARY_PROXY") == "1"
 	routesCallback(&up)
-
-	if up.enableGeoProxyFeature {
-		go up.pollGeoProxyAPI()
-	}
 
 	var correlationOpts []correlation.InboundHandlerOption
 	if cfg.PropagateCorrelationID {
@@ -145,7 +136,9 @@ func (u *upstream) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	cleanedPath := prefix.Strip(URIPath)
 
 	route := u.findRoute(cleanedPath, r)
-
+	//dump, _ := httputil.DumpRequest(r, true)
+	//fmt.Printf("%q\n", dump)
+	fmt.Printf("%s,%q\n", cleanedPath, route)
 	if route == nil {
 		// The protocol spec in git/Documentation/technical/http-protocol.txt
 		// says we must return 403 if no matching service is found.
@@ -177,14 +170,19 @@ func (u *upstream) findRoute(cleanedPath string, r *http.Request) *routeEntry {
 }
 
 func (u *upstream) findGeoProxyRoute(cleanedPath string, r *http.Request) *routeEntry {
-	u.mu.RLock()
-	defer u.mu.RUnlock()
+	geoProxyURL, err := u.APIClient.GetGeoProxyURL()
 
-	if u.geoProxyBackend.String() == "" {
-		log.WithRequest(r).Debug("Geo Proxy: Not a Geo proxy")
-		return nil
+	if err == nil {
+		u.setGeoProxyRoutes(geoProxyURL)
+		return u.matchGeoProxyRoute(cleanedPath, r)
+	} else if err != apipkg.ErrNotGeoSecondary {
+		log.WithRequest(r).WithError(err).Error("Geo Proxy: Unable to determine Geo Proxy URL. Falling back to normal routing")
 	}
 
+	return nil
+}
+
+func (u *upstream) matchGeoProxyRoute(cleanedPath string, r *http.Request) *routeEntry {
 	// Some routes are safe to serve from this GitLab instance
 	for _, ro := range u.geoLocalRoutes {
 		if ro.isMatch(cleanedPath, r) {
@@ -195,6 +193,8 @@ func (u *upstream) findGeoProxyRoute(cleanedPath string, r *http.Request) *route
 
 	log.WithRequest(r).WithFields(log.Fields{"geoProxyBackend": u.geoProxyBackend}).Debug("Geo Proxy: Forward this request")
 
+	u.mu.RLock()
+	defer u.mu.RUnlock()
 	if cleanedPath == "/-/cable" {
 		return &u.geoProxyCableRoute
 	}
@@ -202,40 +202,15 @@ func (u *upstream) findGeoProxyRoute(cleanedPath string, r *http.Request) *route
 	return &u.geoProxyRoute
 }
 
-func (u *upstream) pollGeoProxyAPI() {
-	for {
-		u.callGeoProxyAPI()
-
-		// Notify tests when callGeoProxyAPI() finishes
-		if u.geoProxyTestChannel != nil {
-			u.geoProxyTestChannel <- struct{}{}
-		}
-
-		time.Sleep(geoProxyApiPollingInterval)
-	}
-}
-
-// Calls /api/v4/geo/proxy and sets up routes
-func (u *upstream) callGeoProxyAPI() {
-	geoProxyURL, err := u.APIClient.GetGeoProxyURL()
-	if err != nil {
-		log.WithError(err).WithFields(log.Fields{"geoProxyBackend": u.geoProxyBackend}).Error("Geo Proxy: Unable to determine Geo Proxy URL. Fallback on cached value.")
-		return
-	}
-
-	if u.geoProxyBackend.String() != geoProxyURL.String() {
-		log.WithFields(log.Fields{"oldGeoProxyURL": u.geoProxyBackend, "newGeoProxyURL": geoProxyURL}).Info("Geo Proxy: URL changed")
-		u.updateGeoProxyFields(geoProxyURL)
-	}
-}
-
-func (u *upstream) updateGeoProxyFields(geoProxyURL *url.URL) {
+func (u *upstream) setGeoProxyRoutes(geoProxyURL *url.URL) {
 	u.mu.Lock()
 	defer u.mu.Unlock()
-
-	u.geoProxyBackend = geoProxyURL
-	geoProxyRoundTripper := roundtripper.NewBackendRoundTripper(u.geoProxyBackend, "", u.ProxyHeadersTimeout, u.DevelopmentMode)
-	geoProxyUpstream := proxypkg.NewProxy(u.geoProxyBackend, u.Version, geoProxyRoundTripper)
-	u.geoProxyCableRoute = u.wsRoute(`^/-/cable\z`, geoProxyUpstream)
-	u.geoProxyRoute = u.route("", "", geoProxyUpstream)
+	if u.geoProxyBackend == nil || u.geoProxyBackend.String() != geoProxyURL.String() {
+		log.WithFields(log.Fields{"geoProxyURL": geoProxyURL}).Debug("Geo Proxy: Update GeoProxyRoute")
+		u.geoProxyBackend = geoProxyURL
+		geoProxyRoundTripper := roundtripper.NewBackendRoundTripper(u.geoProxyBackend, "", u.ProxyHeadersTimeout, u.DevelopmentMode)
+		geoProxyUpstream := proxypkg.NewProxy(u.geoProxyBackend, u.Version, geoProxyRoundTripper)
+		u.geoProxyCableRoute = u.wsRoute(`^/-/cable\z`, geoProxyUpstream)
+		u.geoProxyRoute = u.route("", "", geoProxyUpstream)
+	}
 }

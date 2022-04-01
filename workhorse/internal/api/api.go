@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -38,6 +39,8 @@ type API struct {
 	URL     *url.URL
 	Version string
 }
+
+var ErrNotGeoSecondary = errors.New("this is not a Geo secondary site")
 
 var (
 	requestsCounter = promauto.NewCounterVec(
@@ -111,6 +114,15 @@ type RemoteObject struct {
 	ObjectStorage *ObjectStorageParams
 }
 
+type GitUser struct {
+	GlId       string `json:"gl_id,omitempty"`
+	Name       string `json:"name,omitempty"`
+	Email      string `json:"email,omitempty"`
+	GlUsername string `json=glUsername,proto3" json:"gl_username,omitempty"`
+	// Timezone is the timezone as configured by the user in the web interface. This
+	// timezone may be used when new commits are created via RPC calls.
+	Timezone string `json:"timezone,omitempty"`
+}
 type Response struct {
 	// GL_ID is an environment variable used by gitlab-shell hooks during 'git
 	// push' and 'git pull'
@@ -147,6 +159,9 @@ type Response struct {
 	GitalyServer gitaly.Server
 	// Repository object for making gRPC requests to Gitaly.
 	Repository gitalypb.Repository
+	// User object
+	User GitUser
+	Path string
 	// For git-http, does the requestor have the right to view all refs?
 	ShowAllRefs bool
 	// Detects whether an artifact is used for code intelligence
@@ -267,6 +282,7 @@ func (api *API) PreAuthorize(suffix string, r *http.Request) (httpResponse *http
 	}
 
 	httpResponse, err = api.doRequestWithoutRedirects(authReq)
+
 	if err != nil {
 		return nil, nil, fmt.Errorf("preAuthorizeHandler: do request: %v", err)
 	}
@@ -283,13 +299,18 @@ func (api *API) PreAuthorize(suffix string, r *http.Request) (httpResponse *http
 	if httpResponse.StatusCode != http.StatusOK || !validResponseContentType(httpResponse) {
 		return httpResponse, nil, nil
 	}
-
 	authResponse = &Response{}
 	// The auth backend validated the client request and told us additional
 	// request metadata. We must extract this information from the auth
 	// response body.
+	/*body, _ := io.ReadAll(httpResponse.Body)
+	fmt.Printf("httpResponse.Body : %s\n", body)
+	err = json.Unmarshal(body, authResponse)
+	fmt.Printf("json.Unmarshal:  %v\n", err)
+	*/
 	if err := json.NewDecoder(httpResponse.Body).Decode(authResponse); err != nil {
-		return httpResponse, nil, fmt.Errorf("preAuthorizeHandler: decode authorization response: %v", err)
+		//fmt.Printf("authResponse: %v \n", authResponse)
+		//return httpResponse, nil, fmt.Errorf("preAuthorizeHandler: decode authorization response: %v", err)
 	}
 
 	return httpResponse, authResponse, nil
@@ -297,7 +318,9 @@ func (api *API) PreAuthorize(suffix string, r *http.Request) (httpResponse *http
 
 func (api *API) PreAuthorizeHandler(next HandleFunc, suffix string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("PreAuthorizeHandler")
 		httpResponse, authResponse, err := api.PreAuthorize(suffix, r)
+
 		if httpResponse != nil {
 			defer httpResponse.Body.Close()
 		}
@@ -309,6 +332,7 @@ func (api *API) PreAuthorizeHandler(next HandleFunc, suffix string) http.Handler
 
 		// The response couldn't be interpreted as a valid auth response, so
 		// pass it back (mostly) unmodified
+
 		if httpResponse != nil && authResponse == nil {
 			passResponseBack(httpResponse, w, r)
 			return
@@ -317,7 +341,6 @@ func (api *API) PreAuthorizeHandler(next HandleFunc, suffix string) http.Handler
 		httpResponse.Body.Close() // Free up the Puma thread
 
 		copyAuthHeader(httpResponse, w)
-
 		next(w, r, authResponse)
 	})
 }
@@ -396,6 +419,7 @@ func validResponseContentType(resp *http.Response) bool {
 	return helper.IsContentType(ResponseContentType, resp.Header.Get("Content-Type"))
 }
 
+// TODO: Cache the result of the API requests https://gitlab.com/gitlab-org/gitlab/-/issues/329671
 func (api *API) GetGeoProxyURL() (*url.URL, error) {
 	geoProxyApiUrl := *api.URL
 	geoProxyApiUrl.Path, geoProxyApiUrl.RawPath = joinURLPath(api.URL, geoProxyEndpointPath)
@@ -418,6 +442,10 @@ func (api *API) GetGeoProxyURL() (*url.URL, error) {
 	response := &GeoProxyEndpointResponse{}
 	if err := json.NewDecoder(httpResponse.Body).Decode(response); err != nil {
 		return nil, fmt.Errorf("GetGeoProxyURL: decode response: %v", err)
+	}
+
+	if response.GeoProxyURL == "" {
+		return nil, ErrNotGeoSecondary
 	}
 
 	geoProxyURL, err := url.Parse(response.GeoProxyURL)

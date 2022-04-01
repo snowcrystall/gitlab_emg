@@ -1,6 +1,7 @@
 package upstream
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
 	"path"
@@ -158,7 +159,7 @@ func (ro *routeEntry) isMatch(cleanedPath string, req *http.Request) bool {
 	if ro.regex != nil && !ro.regex.MatchString(cleanedPath) {
 		return false
 	}
-
+	fmt.Println(ro.regex, cleanedPath)
 	ok := true
 	for _, matcher := range ro.matchers {
 		ok = matcher(req)
@@ -322,6 +323,7 @@ func configureRoutes(u *upstream) {
 		),
 
 		// Uploads
+		u.route("POST", projectPattern+`-/upload_dir`, upload.DirUploadCommit(api, u.Config.DocumentRoot)),
 		u.route("POST", projectPattern+`uploads\z`, upload.Accelerate(api, signingProxy, preparers.uploads)),
 		u.route("POST", snippetUploadPattern, upload.Accelerate(api, signingProxy, preparers.uploads)),
 		u.route("POST", userUploadPattern, upload.Accelerate(api, signingProxy, preparers.uploads)),

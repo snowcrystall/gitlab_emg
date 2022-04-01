@@ -62,5 +62,7 @@ func HandleFileUploads(w http.ResponseWriter, r *http.Request, h http.Handler, p
 	}
 
 	// Proxy the request
+
+	fmt.Printf("request: %s\n", r)
 	h.ServeHTTP(w, r)
 }

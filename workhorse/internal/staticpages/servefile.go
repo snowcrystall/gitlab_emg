@@ -28,6 +28,7 @@ const (
 // upstream.
 func (s *Static) ServeExisting(prefix urlprefix.Prefix, cache CacheMode, notFoundHandler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("ServeExisting")
 		if notFoundHandler == nil {
 			notFoundHandler = http.HandlerFunc(http.NotFound)
 		}
