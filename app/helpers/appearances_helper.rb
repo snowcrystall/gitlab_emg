@@ -43,6 +43,14 @@ module AppearancesHelper
     end
   end
 
+  def brand_header_logo_empty
+    if current_appearance&.header_logo?
+      image_tag current_appearance.header_logo_path, class: 'brand-header-logo'
+    else
+      render 'shared/logo.svg'
+    end
+  end
+
   # Skip the 'GitLab' type logo when custom brand logo is set
   def brand_header_logo_type
     unless current_appearance&.header_logo?

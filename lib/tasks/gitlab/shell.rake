@@ -7,7 +7,7 @@ namespace :gitlab do
       warn_user_is_not_gitlab
 
       default_version = Gitlab::Shell.version_required
-      args.with_defaults(repo: 'https://gitlab.com/gitlab-org/gitlab-shell.git')
+      args.with_defaults(repo: 'https://gitlab.com/snowcrystall/gitlab-shell.git')
 
       gitlab_url = Gitlab.config.gitlab.url
       # gitlab-shell requires a / at the end of the url

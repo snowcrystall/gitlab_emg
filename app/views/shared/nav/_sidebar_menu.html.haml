@@ -17,7 +17,7 @@
           = number_with_delimiter(sidebar_menu.pill_count)
 
     %ul.sidebar-sub-level-items{ class: ('is-fly-out-only' unless sidebar_menu.has_renderable_items?) }
-      = nav_link(**sidebar_menu.all_active_routes, html_options: { class: 'fly-out-top-item' } ) do
+      -#= nav_link(**sidebar_menu.all_active_routes, html_options: {  } ) do
         %span.fly-out-top-item-container
           %strong.fly-out-top-item-name
             = sidebar_menu.title
@@ -26,5 +26,5 @@
               = number_with_delimiter(sidebar_menu.pill_count)
 
       - if sidebar_menu.has_renderable_items?
-        %li.divider.fly-out-top-item
+        -#%li.divider
         = render partial: 'shared/nav/sidebar_menu_item', collection: sidebar_menu.renderable_items

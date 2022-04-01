@@ -1,4 +1,4 @@
-.form-group.row
+-#.form-group.row
   .col-sm-2.col-form-label.pt-0
     = f.label :lfs_enabled, _('Large File Storage')
   .col-sm-10
@@ -22,7 +22,7 @@
   .col-sm-10
     = f.select :subgroup_creation_level, options_for_select(::Gitlab::Access.subgroup_creation_options, @group.subgroup_creation_level), {}, class: 'form-control'
 
-.form-group.row
+-#.form-group.row
   .col-sm-2.col-form-label.pt-0
     = f.label :require_two_factor_authentication, _('Two-factor authentication')
   .col-sm-10
@@ -32,7 +32,7 @@
         %strong
           = _("Require all users in this group to setup Two-factor authentication")
           = link_to sprite_icon('question-o'), help_page_path('security/two_factor_authentication', anchor: 'enforcing-2fa-for-all-users-in-a-group')
-.form-group.row
+-#.form-group.row
   .offset-sm-2.col-sm-10
     .form-check
       = f.text_field :two_factor_grace_period, class: 'form-control'

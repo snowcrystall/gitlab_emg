@@ -12,29 +12,32 @@ module Gitlab
     INTERNAL_API_CONTENT_TYPE = 'application/vnd.gitlab-workhorse+json'
     INTERNAL_API_REQUEST_HEADER = 'Gitlab-Workhorse-Api-Request'
     NOTIFICATION_CHANNEL = 'workhorse:notifications'
-    ALLOWED_GIT_HTTP_ACTIONS = %w[git_receive_pack git_upload_pack info_refs].freeze
+    ALLOWED_GIT_HTTP_ACTIONS = %w[git_receive_pack git_upload_pack info_refs upload_dir].freeze
     DETECT_HEADER = 'Gitlab-Workhorse-Detect-Content-Type'
     ARCHIVE_FORMATS = %w(zip tar.gz tar.bz2 tar).freeze
 
     include JwtAuthenticatable
 
     class << self
-      def git_http_ok(repository, repo_type, user, action, show_all_refs: false)
+      def git_http_ok(repository, repo_type, user, action, path ,show_all_refs: false)
         raise "Unsupported action: #{action}" unless ALLOWED_GIT_HTTP_ACTIONS.include?(action.to_s)
-
+        Gitlab::AppLogger.info( user.inspect)
         attrs = {
           GL_ID: Gitlab::GlId.gl_id(user),
           GL_REPOSITORY: repo_type.identifier_for_container(repository.container),
           GL_USERNAME: user&.username,
           ShowAllRefs: show_all_refs,
           Repository: repository.gitaly_repository.to_h,
+          User: user.present? ?   Gitlab::Git::User.from_gitlab(user).to_gitaly.to_h : '',
           GitConfigOptions: [],
           GitalyServer: {
             address: Gitlab::GitalyClient.address(repository.storage),
             token: Gitlab::GitalyClient.token(repository.storage),
             features: Feature::Gitaly.server_feature_flags(repository.project)
-          }
+          },
+          Path: path 
         }
+        
 
         # Custom option for git-receive-pack command
         receive_max_input_size = Gitlab::CurrentSettings.receive_max_input_size.to_i

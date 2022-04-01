@@ -30,8 +30,8 @@ module Nav
         menu_items.push(
           ::Gitlab::Nav::TopNavMenuItem.build(
             id: 'new_project',
-            title: _('New project/repository'),
-            href: new_project_path(namespace_id: group.id),
+            title: _('New project'),
+            href: new_project_path(namespace_id: group.id)+"#blank_project",
             data: { track_event: 'click_link_new_project_group', track_label: 'plus_menu_dropdown' }
           )
         )
@@ -42,7 +42,7 @@ module Nav
           ::Gitlab::Nav::TopNavMenuItem.build(
             id: 'new_subgroup',
             title: _('New subgroup'),
-            href: new_group_path(parent_id: group.id),
+            href: new_group_path(parent_id: group.id)+"#create-group-pane",
             data: { track_event: 'click_link_new_subgroup', track_label: 'plus_menu_dropdown' }
           )
         )
@@ -68,38 +68,40 @@ module Nav
       menu_items = []
       merge_project = merge_request_source_project_for_project(project)
 
-      if show_new_issue_link?(project)
-        menu_items.push(
-          ::Gitlab::Nav::TopNavMenuItem.build(
-            id: 'new_issue',
-            title: _('New issue'),
-            href: new_project_issue_path(project),
-            data: { track_event: 'click_link_new_issue', track_label: 'plus_menu_dropdown', qa_selector: 'new_issue_link' }
-          )
-        )
-      end
+      #if show_new_issue_link?(project)
+      #  menu_items.push(
+      #    ::Gitlab::Nav::TopNavMenuItem.build(
+      #      id: 'new_issue',
+      #      title: _('New issue'),
+      #      href: new_project_issue_path(project),
+      #      data: { track_event: 'click_link_new_issue', track_label: 'plus_menu_dropdown', qa_selector: 'new_issue_link' }
+      #    )
+      #  )
+      #end
 
-      if merge_project
-        menu_items.push(
-          ::Gitlab::Nav::TopNavMenuItem.build(
-            id: 'new_mr',
-            title: _('New merge request'),
-            href: project_new_merge_request_path(merge_project),
-            data: { track_event: 'click_link_new_mr', track_label: 'plus_menu_dropdown' }
-          )
-        )
-      end
+      #if merge_project
+      #  menu_items.push(
+      #    ::Gitlab::Nav::TopNavMenuItem.build(
+      #      id: 'new_mr',
+      #      title: _('New merge request'),
+      #      href: project_new_merge_request_path(merge_project),
+      #      data: { track_event: 'click_link_new_mr', track_label: 'plus_menu_dropdown' }
+      #    )
+      #  )
+      #end
 
-      if can?(current_user, :create_snippet, project)
-        menu_items.push(
-          ::Gitlab::Nav::TopNavMenuItem.build(
-            id: 'new_snippet',
-            title: _('New snippet'),
-            href: new_project_snippet_path(project),
-            data: { track_event: 'click_link_new_snippet_project', track_label: 'plus_menu_dropdown' }
-          )
-        )
-      end
+      
+#      if can?(current_user, :create_snippet, project)
+#        menu_items.push(
+#          ::Gitlab::Nav::TopNavMenuItem.build(
+#            id: 'new_snippet',
+#            title: _('New snippet'),
+#            href: new_project_snippet_path(project),
+#            data: { track_event: 'click_link_new_snippet_project', track_label: 'plus_menu_dropdown' }
+#          )
+#        )
+#      end
+     
 
       if Gitlab::Experimentation.active?(:invite_members_new_dropdown) && can_admin_project_member?(project)
         menu_items.push(
@@ -122,8 +124,8 @@ module Nav
         menu_items.push(
           ::Gitlab::Nav::TopNavMenuItem.build(
             id: 'general_new_project',
-            title: _('New project/repository'),
-            href: new_project_path,
+            title: _('New project'),
+            href: new_project_path+"#blank_project",
             data: { track_event: 'click_link_new_project', track_label: 'plus_menu_dropdown', qa_selector: 'global_new_project_link' }
           )
         )
@@ -134,25 +136,25 @@ module Nav
           ::Gitlab::Nav::TopNavMenuItem.build(
             id: 'general_new_group',
             title: _('New group'),
-            href: new_group_path,
+            href: new_group_path+"#create-group-pane",
             data: { track_event: 'click_link_new_group', track_label: 'plus_menu_dropdown' }
           )
         )
       end
 
-      if current_user.can?(:create_snippet)
-        menu_items.push(
-          ::Gitlab::Nav::TopNavMenuItem.build(
-            id: 'general_new_snippet',
-            title: _('New snippet'),
-            href: new_snippet_path,
-            data: { track_event: 'click_link_new_snippet_parent', track_label: 'plus_menu_dropdown', qa_selector: 'global_new_snippet_link' }
-          )
-        )
-      end
+#      if current_user.can?(:create_snippet)
+#        menu_items.push(
+#          ::Gitlab::Nav::TopNavMenuItem.build(
+#            id: 'general_new_snippet',
+#            title: _('New snippet'),
+#            href: new_snippet_path,
+#            data: { track_event: 'click_link_new_snippet_parent', track_label: 'plus_menu_dropdown', qa_selector: 'global_new_snippet_link' }
+#          )
+#        )
+#      end
 
       {
-        title: _('GitLab'),
+        title: _(''),
         menu_items: menu_items
       }
     end

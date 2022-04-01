@@ -5,7 +5,7 @@ set -e
 cd $(dirname $0)/..
 app_root=$(pwd)
 
-puma_pidfile="$app_root/tmp/pids/puma.pid"
+puma_pidfile="$app_root/../tmp/pids/puma.pid"
 puma_config="$app_root/config/puma.rb"
 
 spawn_puma()

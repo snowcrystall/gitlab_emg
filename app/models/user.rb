@@ -51,7 +51,7 @@ class User < ApplicationRecord
   default_value_for :hide_no_password, false
   default_value_for :project_view, :files
   default_value_for :notified_of_own_activity, false
-  default_value_for :preferred_language, I18n.default_locale
+  default_value_for :preferred_language, 'zh_CH'
   default_value_for :theme_id, gitlab_config.default_theme
 
   attr_encrypted :otp_secret,
@@ -221,11 +221,12 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { maximum: 255 }
   validates :first_name, length: { maximum: 127 }
   validates :last_name, length: { maximum: 127 }
-  validates :email, confirmation: true
-  validates :notification_email, presence: true
-  validates :notification_email, devise_email: true, if: ->(user) { user.notification_email != user.email }
-  validates :public_email, uniqueness: true, devise_email: true, allow_blank: true
-  validates :commit_email, devise_email: true, allow_nil: true, if: ->(user) { user.commit_email != user.email }
+  #validates :email,  confirmation: true, allow_blank: true, allow_nil:true
+  
+  #validates :notification_email, allow_nil: true, presence: true
+  #validates :notification_email, devise_email: true, if: ->(user) { user.notification_email != user.email }
+  #validates :public_email, uniqueness: true, devise_email: true, allow_blank: true
+  #validates :commit_email, devise_email: true, allow_nil: true, if: ->(user) { user.commit_email != user.email }
   validates :projects_limit,
     presence: true,
     numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: Gitlab::Database::MAX_INT_VALUE }
@@ -234,11 +235,11 @@ class User < ApplicationRecord
   validates :namespace, presence: true
   validate :namespace_move_dir_allowed, if: :username_changed?
 
-  validate :unique_email, if: :email_changed?
-  validate :notification_email_verified, if: :notification_email_changed?
-  validate :public_email_verified, if: :public_email_changed?
-  validate :commit_email_verified, if: :commit_email_changed?
-  validate :signup_email_valid?, on: :create, if: ->(user) { !user.created_by_id }
+  #validate :unique_email, if: :email_changed?
+  #validate :notification_email_verified, if: :notification_email_changed?
+  #validate :public_email_verified, if: :public_email_changed?
+  #validate :commit_email_verified, if: :commit_email_changed?
+  #validate :signup_email_valid?, on: :create, if: ->(user) { !user.created_by_id }
   validate :check_username_format, if: :username_changed?
 
   validates :theme_id, allow_nil: true, inclusion: { in: Gitlab::Themes.valid_ids,
@@ -255,8 +256,8 @@ class User < ApplicationRecord
   before_save :set_commit_email, if: :commit_email_changed? # in case validation is skipped
   before_save :ensure_incoming_email_token
   before_save :ensure_user_rights_and_limits, if: ->(user) { user.new_record? || user.external_changed? }
-  before_save :skip_reconfirmation!, if: ->(user) { user.email_changed? && user.read_only_attribute?(:email) }
-  before_save :check_for_verified_email, if: ->(user) { user.email_changed? && !user.new_record? }
+  #before_save :skip_reconfirmation!, if: ->(user) { user.email_changed? && user.read_only_attribute?(:email) }
+  #before_save :check_for_verified_email, if: ->(user) { user.email_changed? && !user.new_record? }
   before_validation :ensure_namespace_correct
   before_save :ensure_namespace_correct # in case validation is skipped
   after_validation :set_username_errors
@@ -444,7 +445,7 @@ class User < ApplicationRecord
   def preferred_language
     read_attribute('preferred_language') ||
       I18n.default_locale.to_s.presence_in(Gitlab::I18n.available_locales) ||
-      'en'
+      'zh_CH'
   end
 
   def active_for_authentication?

@@ -40447,3 +40447,6 @@ msgstr ""
 
 msgid "your settings"
 msgstr ""
+
+msgid "Groups are a great way to organize projects and people."
+msgstr ""

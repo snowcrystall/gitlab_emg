@@ -6,7 +6,7 @@ class Projects::JobsController < Projects::ApplicationController
 
   before_action :find_job_as_build, except: [:index, :play]
   before_action :find_job_as_processable, only: [:play]
-  before_action :authorize_read_build_trace!, only: [:trace, :raw]
+  #before_action :authorize_read_build_trace!, only: [:trace, :raw]
   before_action :authorize_read_build!
   before_action :authorize_update_build!,
     except: [:index, :show, :status, :raw, :trace, :erase, :cancel, :unschedule]

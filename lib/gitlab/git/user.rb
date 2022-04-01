@@ -37,6 +37,7 @@ module Gitlab
       end
 
       def to_gitaly
+        Gitlab::AppLogger.info( "#{username},#{gl_id},#{name.b},#{timezone}")
         Gitaly::User.new(gl_username: username, gl_id: gl_id, name: name.b, email: email.b, timezone: timezone)
       end
     end

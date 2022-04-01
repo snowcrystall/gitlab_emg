@@ -1,25 +1,25 @@
 .blank-state-row
   - if current_user.can_create_project?
-    = link_to new_project_path, class: "blank-state blank-state-link" do
+    = link_to new_project_path+"#blank_project", class: "blank-state blank-state-link" do
       .blank-state-icon
         = custom_icon("add_new_project", size: 50)
       .blank-state-body
         %h3.blank-state-title
-          Create a project
+          =_('ProjectsNew|Create new project')
         %p.blank-state-text
-          Projects are where you store your code, access issues, wiki and other features of GitLab.
+          -#Projects are where you store your code, access issues, wiki and other features of GitLab.
   - else
     .blank-state
       .blank-state-icon
         = custom_icon("add_new_project", size: 50)
       .blank-state-body
         %h3.blank-state-title
-          Create a project
+          =_('ProjectsNew|Create new project')
         %p.blank-state-text
           If you are added to a project, it will be displayed here.
 
   - if current_user.can_create_group?
-    = link_to new_group_path, class: "blank-state blank-state-link" do
+    = link_to new_group_path+"#create-group-pane", class: "blank-state blank-state-link" do
       .blank-state-icon
         = custom_icon("add_new_group", size: 50)
       .blank-state-body
@@ -38,7 +38,7 @@
         Public projects are an easy way to allow
         everyone to have read-only access.
 
-  = link_to "https://docs.gitlab.com/", class: "blank-state blank-state-link" do
+  -#= link_to "https://docs.gitlab.com/", class: "blank-state blank-state-link" do
     .blank-state-icon
       = custom_icon("lightbulb", size: 50)
     .blank-state-body

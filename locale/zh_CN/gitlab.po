@@ -15069,8 +15069,8 @@ msgstr ""
 msgid "GitLab is undergoing maintenance and is operating in a read-only mode."
 msgstr "GitLab正在维护中，处于只读模式。"
 
-msgid "GitLab member or Email address"
-msgstr "GitLab成员或电子邮件地址"
+msgid "member or Email address"
+msgstr "成员或电子邮件地址"
 
 msgid "GitLab metadata URL"
 msgstr "GitLab 元数据 URL"
@@ -25656,7 +25656,7 @@ msgid "Project info:"
 msgstr "项目信息："
 
 msgid "Project information"
-msgstr ""
+msgstr "项目信息"
 
 msgid "Project is required when cluster_type is :project"
 msgstr "cluster_type为:project时项目为必需"
@@ -26340,7 +26340,7 @@ msgid "ProjectsNew|Create"
 msgstr "创建"
 
 msgid "ProjectsNew|Create a blank project to house your files, plan your work, and collaborate on code, among other things."
-msgstr "创建一个空白项目来存放您的文件，规划您的工作，并在代码等方面进行协作。"
+msgstr "创建一个空白项目来存放您的文件。"
 
 msgid "ProjectsNew|Create a project pre-populated with the necessary files to get you started quickly."
 msgstr ""
@@ -30078,7 +30078,7 @@ msgid "Set an instance-wide domain that will be available to all clusters when i
 msgstr "设置实例级别的域，可用于所有集群安装Knative。"
 
 msgid "Set default and restrict visibility levels. Configure import sources and git access protocol."
-msgstr "设定缺省及受限可见性级别。配置导入来源及git访问协议。"
+msgstr "设定缺省及受限可见性级别。"
 
 msgid "Set due date"
 msgstr "设置截止日期"
@@ -40065,4 +40065,22 @@ msgstr "yaml无效"
 
 msgid "your settings"
 msgstr "您的设置"
+
+msgid "Upload directory"
+msgstr "上传目录"
+
+msgid "Upload new directory"
+msgstr "上传新目录"
+
+msgid "Remove"
+msgstr "删除"
+
+msgid "Progress"
+msgstr "上传进度"
+
+msgid "Drop or %{linkStart}upload%{linkEnd} directory to attach"
+msgstr "拖放或%{linkStart}上传%{linkEnd}目录"
+
+msgid "Groups are a great way to organize projects and people."
+msgstr "群组是管理项目和人员的一个好方式。"
 

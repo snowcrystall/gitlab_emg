@@ -23,9 +23,9 @@ function onSidebarLinkClick() {
   const CLICK_MENU_ACTION = 'click_menu';
   const CLICK_MENU_ITEM_ACTION = 'click_menu_item';
   const parentElement = this.parentNode;
-  const subMenuList = parentElement.closest('.sidebar-sub-level-items');
+  //const subMenuList = parentElement.closest('.sidebar-sub-level-items');
 
-  if (subMenuList) {
+  /*if (subMenuList) {
     const isFlyOut = subMenuList.classList.contains('fly-out-list') ? FLY_OUT : EXPANDED;
 
     setDataTrackExtra(parentElement, isFlyOut);
@@ -35,7 +35,7 @@ function onSidebarLinkClick() {
 
     setDataTrackExtra(parentElement, isFlyOut);
     setDataTrackAction(parentElement, CLICK_MENU_ACTION);
-  }
+  }*/
 }
 export const initSidebarTracking = () => {
   document.querySelectorAll('.nav-sidebar li[data-track-label] > a').forEach((link) => {

@@ -13,7 +13,7 @@ module Users
       user = build_class.new(current_user, params).execute
       reset_token = user.generate_reset_token if user.recently_sent_password_reset?
 
-      after_create_hook(user, reset_token) if user.save
+      after_create_hook(user, reset_token) if user.save()
 
       user
     end
@@ -21,7 +21,7 @@ module Users
     private
 
     def after_create_hook(user, reset_token)
-      notify_new_user(user, reset_token)
+      #notify_new_user(user, reset_token)
     end
 
     def build_class

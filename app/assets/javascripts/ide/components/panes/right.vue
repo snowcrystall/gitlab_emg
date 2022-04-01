@@ -43,12 +43,12 @@ export default {
           views: [{ component: Clientside, ...rightSidebarViews.clientSidePreview }],
           icon: 'live-preview',
         },
-        {
+        /*{
           show: this.isTerminalVisible,
           title: __('Terminal'),
           views: [{ component: TerminalView, ...rightSidebarViews.terminal }],
           icon: 'terminal',
-        },
+        },*/
       ];
     },
   },

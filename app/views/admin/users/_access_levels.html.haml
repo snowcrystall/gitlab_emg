@@ -49,7 +49,7 @@
         .badge.badge-warning.text-white
           = s_('AdminUsers|Automatically marked as default internal user')
 
-  .form-group.row
+  -#.form-group.row
     - @user.credit_card_validation || @user.build_credit_card_validation
     = f.fields_for :credit_card_validation do |ff|
       .col-sm-2.col-form-label.gl-pt-0

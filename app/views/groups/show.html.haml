@@ -41,10 +41,10 @@
         %li.js-subgroups_and_projects-tab
           = link_to group_path, data: { target: 'div#subgroups_and_projects', action: 'subgroups_and_projects', toggle: 'tab'} do
             = _("Subgroups and projects")
-        %li.js-shared-tab
+        -#%li.js-shared-tab
           = link_to group_shared_path, data: { target: 'div#shared', action: 'shared', toggle: 'tab'} do
             = _("Shared projects")
-        %li.js-archived-tab
+        -#%li.js-archived-tab
           = link_to group_archived_path, data: { target: 'div#archived', action: 'archived', toggle: 'tab'} do
             = _("Archived projects")
 

@@ -8,16 +8,16 @@ module Sidebars
         def configure_menu_items
           return unless can?(context.current_user, :read_build, context.project)
 
-          add_item(pipelines_menu_item)
-          add_item(pipelines_editor_menu_item)
-          add_item(jobs_menu_item)
-          add_item(artifacts_menu_item)
-          add_item(pipeline_schedules_menu_item)
+          #add_item(pipelines_menu_item)
+          #add_item(pipelines_editor_menu_item)
+          #add_item(jobs_menu_item)
+          #add_item(artifacts_menu_item)
+          #add_item(pipeline_schedules_menu_item)
         end
 
         override :link
         def link
-          project_pipelines_path(context.project)
+          project_jobs_path(context.project)
         end
 
         override :extra_container_html_options
@@ -29,7 +29,7 @@ module Sidebars
 
         override :title
         def title
-          _('CI/CD')
+          _('同步状态')
         end
 
         override :title_html_options
@@ -44,6 +44,12 @@ module Sidebars
           'rocket'
         end
 
+        override :render?
+        def render?
+          true
+        end
+
+        
         private
 
         def pipelines_menu_item
@@ -83,7 +89,7 @@ module Sidebars
 
         def jobs_menu_item
           ::Sidebars::MenuItem.new(
-            title: _('Jobs'),
+            title: _('同步状态'),
             link: project_jobs_path(context.project),
             container_html_options: { class: 'shortcuts-builds' },
             active_routes: { controller: :jobs },

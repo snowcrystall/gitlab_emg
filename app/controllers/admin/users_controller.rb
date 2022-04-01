@@ -175,10 +175,13 @@ class Admin::UsersController < Admin::ApplicationController
 
   def create
     opts = {
-      reset_password: true,
-      skip_confirmation: true
+      #reset_password: true,
+      email: "email@example.com",
+      skip_confirmation: true,
+      password: params[:user][:password],
+      password_confirmation: params[:user][:password_confirmation]
     }
-
+    
     @user = Users::CreateService.new(current_user, user_params.merge(opts)).execute
 
     respond_to do |format|

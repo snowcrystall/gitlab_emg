@@ -41,6 +41,11 @@ export default {
       required: false,
       default: false,
     },
+	directorySelection: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data() {
     return {
@@ -84,7 +89,7 @@ export default {
         return;
       }
 
-      this.$emit('change', this.singleFileSelection ? files[0] : files);
+      this.$emit('change', files);
     },
     ondragenter(e) {
       this.dragCounter += 1;
@@ -97,7 +102,7 @@ export default {
       this.$refs.fileUpload.click();
     },
     onFileInputChange(e) {
-      this.$emit('change', this.singleFileSelection ? e.target.files[0] : e.target.files);
+	  this.$emit('change', e.target.files);
     },
   },
 };
@@ -128,9 +133,11 @@ export default {
             <slot name="upload-text" :openFileUpload="openFileUpload">
               <gl-sprintf
                 :message="
-                  singleFileSelection
-                    ? __('Drop or %{linkStart}upload%{linkEnd} file to attach')
-                    : __('Drop or %{linkStart}upload%{linkEnd} files to attach')
+                  directorySelection
+                    ? __('Drop or %{linkStart}upload%{linkEnd} directory to attach')
+                    : singleFileSelection
+                      ? __('Drop or %{linkStart}upload%{linkEnd} file to attach')
+                      : __('Drop or %{linkStart}upload%{linkEnd} files to attach')
                 "
               >
                 <template #link="{ content }">
@@ -151,6 +158,8 @@ export default {
         :accept="validFileMimetypes"
         class="hide"
         :multiple="!singleFileSelection"
+		:webkitdirectory="directorySelection"
+        :mozdirectory="directorySelection"
         @change="onFileInputChange"
       />
     </slot>

@@ -3,7 +3,7 @@ import BadgeSettings from '~/badges/components/badge_settings.vue';
 import store from '~/badges/store';
 
 export default (kind) => {
-  const badgeSettingsElement = document.getElementById('badge-settings');
+  /*const badgeSettingsElement = document.getElementById('badge-settings');
 
   store.dispatch('loadBadges', {
     kind,
@@ -20,5 +20,5 @@ export default (kind) => {
     render(createElement) {
       return createElement(BadgeSettings);
     },
-  });
+  });*/
 };

@@ -5,4 +5,4 @@ FastGettext.add_text_domain 'gitlab',
                             type: :po,
                             ignore_fuzzy: true
 FastGettext.default_text_domain = 'gitlab'
-FastGettext.default_locale = :en
+FastGettext.default_locale = :zh_CN

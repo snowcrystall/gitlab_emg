@@ -13,7 +13,7 @@ class Groups::ImportsController < Groups::ApplicationController
         redirect_to group_path(@group), notice: s_('GroupImport|The group was successfully imported.')
       end
     elsif @group.import_state.failed?
-      redirect_to new_group_path(@group), alert: s_('GroupImport|Failed to import group.')
+      redirect_to new_group_path(@group)+"#create-group-pane", alert: s_('GroupImport|Failed to import group.')
     else
       flash.now[:notice] = continue_params[:notice_now]
     end

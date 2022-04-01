@@ -92,6 +92,7 @@ export default function setupVueRepositoryList() {
       forkNewDirectoryPath,
       forkUploadBlobPath,
       uploadPath,
+      uploadDirPath,
       newDirPath,
     } = breadcrumbEl.dataset;
 
@@ -120,6 +121,7 @@ export default function setupVueRepositoryList() {
             forkNewDirectoryPath,
             forkUploadBlobPath,
             uploadPath,
+            uploadDirPath,
           },
         });
       },

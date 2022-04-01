@@ -68,7 +68,7 @@ class ProjectsController < Projects::ApplicationController
 
   def create
     @project = ::Projects::CreateService.new(current_user, project_params(attributes: project_params_create_attributes)).execute
-
+    
     if @project.saved?
       redirect_to(
         project_path(@project, custom_import_params),
@@ -80,7 +80,61 @@ class ProjectsController < Projects::ApplicationController
   end
 
   def update
-    result = ::Projects::UpdateService.new(@project, current_user, project_params).execute
+
+    update_project_params = project_params
+    initialize_with_cicd = Gitlab::Utils.to_boolean(update_project_params.delete(:initialize_with_cicd))
+    cicd_path = update_project_params.delete(:cicd_path)
+    ci_cd_variable_id = update_project_params.delete(:ci_cd_variable_id)
+
+    if initialize_with_cicd 
+      destroy = false
+      commit_attrs = {
+        start_project: @project,
+        start_branch: @project.default_branch_or_main,
+        branch_name: @default_branch.presence || @project.default_branch_or_main,
+        commit_message: 'Initial cicd',
+        file_path: '.gitlab-ci.yml',
+        file_content: experiment(:new_project_cicd_content, namespace: @project.namespace).run_with(@project)
+      }
+      Files::CreateService.new(@project, current_user, commit_attrs).execute
+    else
+      destroy = true
+      git_user = Gitlab::Git::User.from_gitlab(current_user) if current_user.present?
+
+      repository.delete_file(
+        current_user,
+        '.gitlab-ci.yml',
+        message: 'Delete+.gitlab-ci.yml',
+        branch_name: 'main',
+        author_email: git_user&.email,
+        author_name: git_user&.name,
+        start_project: @project,
+        start_branch_name: 'main')
+    end
+
+    if cicd_path == ''
+      cicd_path = 'D:\TEST_PROJECTS'
+    end
+    variables_params = { 
+      variables_attributes: 
+      [{
+          id:ci_cd_variable_id,
+          #variable_type: ,
+          key: 'SHARE_PROJECT_PATH',
+          secret_value: cicd_path,
+          #protected:
+          #masked:
+          _destroy: destroy
+      }]
+    }
+  
+    ::Ci::ChangeVariablesService.new(
+      container: @project, current_user: current_user,
+      params: variables_params
+    ).execute
+    
+
+    result = ::Projects::UpdateService.new(@project, current_user, update_project_params).execute
 
     # Refresh the repo in case anything changed
     @repository = @project.repository
@@ -422,6 +476,8 @@ class ProjectsController < Projects::ApplicationController
       :only_allow_merge_if_all_discussions_are_resolved,
       :only_allow_merge_if_pipeline_succeeds,
       :path,
+      :cicd_path,
+      :ci_cd_variable_id,
       :printing_merge_request_link_enabled,
       :public_builds,
       :remove_source_branch_after_merge,
@@ -434,10 +490,11 @@ class ProjectsController < Projects::ApplicationController
       :template_project_id,
       :merge_method,
       :initialize_with_readme,
+      :initialize_with_cicd,
       :autoclose_referenced_issues,
       :suggestion_commit_message,
       :packages_enabled,
-      :service_desk_enabled,
+      #:service_desk_enabled,
       project_setting_attributes: project_setting_attributes
     ] + [project_feature_attributes: project_feature_attributes]
   end

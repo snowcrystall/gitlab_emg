@@ -107,7 +107,7 @@
             - if @appearance.persisted?
               Preview last save:
               = link_to _('Sign-in page'), preview_sign_in_admin_application_settings_appearances_path, class: 'btn', target: '_blank', rel: 'noopener noreferrer'
-              = link_to _('New project page'), new_project_path, class: 'btn', target: '_blank', rel: 'noopener noreferrer'
+              = link_to _('New project page'), new_project_path+"#blank_project", class: 'btn', target: '_blank', rel: 'noopener noreferrer'
 
             - if @appearance.updated_at
               %span.float-right

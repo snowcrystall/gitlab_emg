@@ -92,6 +92,7 @@ scope format: false do
     get '/commits/*id', to: 'commits#show', as: :commits
 
     post '/create_dir/*id', to: 'tree#create_dir', as: :create_dir
+    post '/upload_dir/*id', to: 'tree#upload_dir', as: :upload_dir
 
     scope controller: :find_file do
       get '/find_file/*id', action: :show, as: :find_file

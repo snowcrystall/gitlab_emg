@@ -9,17 +9,17 @@
     - if @project
       - if project_search_tabs?(:blobs)
         = search_filter_link 'blobs', _("Code"), data: { qa_selector: 'code_tab' }
-      - if project_search_tabs?(:issues)
+      -#- if project_search_tabs?(:issues)
         = search_filter_link 'issues', _("Issues")
-      - if project_search_tabs?(:merge_requests)
+      -#- if project_search_tabs?(:merge_requests)
         = search_filter_link 'merge_requests', _("Merge requests")
-      - if project_search_tabs?(:wiki)
+      -#- if project_search_tabs?(:wiki)
         = search_filter_link 'wiki_blobs', _("Wiki")
       - if project_search_tabs?(:commits)
         = search_filter_link 'commits', _("Commits")
       - if project_search_tabs?(:notes)
         = search_filter_link 'notes', _("Comments")
-      - if project_search_tabs?(:milestones)
+      -#- if project_search_tabs?(:milestones)
         = search_filter_link 'milestones', _("Milestones")
       = users
 

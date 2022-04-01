@@ -65,7 +65,7 @@ export default {
 
 <template>
   <div class="top-nav-container-view gl-display-flex gl-flex-direction-column">
-    <div
+    <!-- <div
       class="frequent-items-dropdown-container gl-w-auto"
       :class="containerClass"
       data-testid="frequent-items-container"
@@ -75,7 +75,7 @@ export default {
           <frequent-items-app :current-item="currentItemTimestamped" v-bind="$attrs" />
         </vuex-module-provider>
       </div>
-    </div>
+    </div> -->
     <top-nav-menu-sections class="gl-mt-auto" :sections="menuSections" with-top-border />
   </div>
 </template>

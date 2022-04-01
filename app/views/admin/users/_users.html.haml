@@ -12,11 +12,11 @@
       = link_to admin_users_path(filter: "admins") do
         = s_('AdminUsers|Admins')
         %small.badge.gl-tab-counter-badge.badge-muted.badge-pill.gl-badge.sm= limited_counter_with_delimiter(User.admins)
-    = nav_link(html_options: { class: "#{active_when(params[:filter] == 'two_factor_enabled')} filter-two-factor-enabled" }) do
+    -#= nav_link(html_options: { class: "#{active_when(params[:filter] == 'two_factor_enabled')} filter-two-factor-enabled" }) do
       = link_to admin_users_path(filter: 'two_factor_enabled') do
         = s_('AdminUsers|2FA Enabled')
         %small.badge.gl-tab-counter-badge.badge-muted.badge-pill.gl-badge.sm= limited_counter_with_delimiter(User.with_two_factor)
-    = nav_link(html_options: { class: "#{active_when(params[:filter] == 'two_factor_disabled')} filter-two-factor-disabled" }) do
+    -#= nav_link(html_options: { class: "#{active_when(params[:filter] == 'two_factor_disabled')} filter-two-factor-disabled" }) do
       = link_to admin_users_path(filter: 'two_factor_disabled') do
         = s_('AdminUsers|2FA Disabled')
         %small.badge.gl-tab-counter-badge.badge-muted.badge-pill.gl-badge.sm= limited_counter_with_delimiter(User.without_two_factor)

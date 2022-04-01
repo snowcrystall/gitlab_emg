@@ -9,6 +9,8 @@ module Projects
       @params = params.dup
       @skip_wiki = @params.delete(:skip_wiki)
       @initialize_with_readme = Gitlab::Utils.to_boolean(@params.delete(:initialize_with_readme))
+      @initialize_with_cicd = Gitlab::Utils.to_boolean(@params.delete(:initialize_with_cicd))
+      @cicd_path = @params.delete(:cicd_path)
       @import_data = @params.delete(:import_data)
       @relations_block = @params.delete(:relations_block)
       @default_branch = @params.delete(:default_branch)
@@ -113,6 +115,7 @@ module Projects
       Projects::PostCreationWorker.perform_async(@project.id)
 
       create_readme if @initialize_with_readme
+      create_cicd if @initialize_with_cicd
     end
 
     # Add an authorization for the current user authorizations inline
@@ -150,6 +153,41 @@ module Projects
         commit_message: 'Initial commit',
         file_path: 'README.md',
         file_content: experiment(:new_project_readme_content, namespace: @project.namespace).run_with(@project)
+      }
+      Files::CreateService.new(@project, current_user, commit_attrs).execute
+  
+    end
+
+    def create_cicd
+      
+    
+      if @cicd_path == ''
+        @cicd_path = 'D:\TEST_PROJECTS'
+      end
+      variables_params = { 
+        variables_attributes: 
+        [{
+            id:'',
+            #variable_type: ,
+            key: 'SHARE_PROJECT_PATH',
+            secret_value: @cicd_path,
+            #protected:
+            #masked:
+            #_destroy:
+        }]
+      }
+    
+      ::Ci::ChangeVariablesService.new(
+        container: @project, current_user: current_user,
+        params: variables_params
+      ).execute
+      
+
+      commit_attrs = {
+        branch_name: @default_branch.presence || @project.default_branch_or_main,
+        commit_message: 'Initial cicd',
+        file_path: '.gitlab-ci.yml',
+        file_content: experiment(:new_project_cicd_content, namespace: @project.namespace).run_with(@project)
       }
 
       Files::CreateService.new(@project, current_user, commit_attrs).execute

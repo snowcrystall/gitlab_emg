@@ -1,7 +1,7 @@
 - blame = local_assigns.fetch(:blame, false)
 .nav-block
   .tree-ref-container
-    .tree-ref-holder
+    -#.tree-ref-holder
       = render 'shared/ref_switcher', destination: 'blob', path: @path
 
     %ul.breadcrumb.repo-breadcrumb

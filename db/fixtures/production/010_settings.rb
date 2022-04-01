@@ -18,12 +18,12 @@ if ENV['GITLAB_SHARED_RUNNERS_REGISTRATION_TOKEN'].present?
   save(settings, 'Runner Registration Token')
 end
 
-if ENV['GITLAB_PROMETHEUS_METRICS_ENABLED'].present?
-  settings = Gitlab::CurrentSettings.current_application_settings
-  value = Gitlab::Utils.to_boolean(ENV['GITLAB_PROMETHEUS_METRICS_ENABLED']) || false
-  settings.prometheus_metrics_enabled = value
-  save(settings, 'Prometheus metrics enabled flag')
-end
+#if ENV['GITLAB_PROMETHEUS_METRICS_ENABLED'].present?
+#  settings = Gitlab::CurrentSettings.current_application_settings
+#  value = Gitlab::Utils.to_boolean(ENV['GITLAB_PROMETHEUS_METRICS_ENABLED']) || false
+#  settings.prometheus_metrics_enabled = value
+#  save(settings, 'Prometheus metrics enabled flag')
+#end
 
 settings = Gitlab::CurrentSettings.current_application_settings
 settings.ci_jwt_signing_key = OpenSSL::PKey::RSA.new(2048).to_pem

@@ -44,6 +44,7 @@ export const initAdminUsersApp = (el = document.querySelector('#js-admin-users-a
 
 export const initAdminUserActions = (el = document.querySelector('#js-admin-user-actions')) =>
   initApp(el, UserActions, 'user', { showButtonLabels: true });
+  
 
 export const initDeleteUserModals = () => {
   const modalsMountElement = document.querySelector(MODAL_TEXTS_CONTAINER_SELECTOR);

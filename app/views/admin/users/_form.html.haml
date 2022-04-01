@@ -16,15 +16,15 @@
         .col-sm-10
           = f.text_field :username, required: true, autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: false, class: 'form-control gl-form-input'
           %span.help-inline * #{_('required')}
-      .form-group.row
+      -#.form-group.row
         .col-sm-2.col-form-label
           = f.label :email
         .col-sm-10
           = f.text_field :email, required: true, autocomplete: 'off', class: 'form-control gl-form-input'
           %span.help-inline * #{_('required')}
 
-    - if @user.new_record?
-      %fieldset
+      -#- if @user.new_record?
+      -#%fieldset
         %legend= _('Password')
         .form-group.row
           .col-sm-2.col-form-label
@@ -32,7 +32,7 @@
           .col-sm-10
             %strong
               = _('Reset link will be generated and sent to the user. %{break} User will be forced to set the password on first sign in.').html_safe % { break: '<br />'.html_safe }
-    - else
+      -#- else
       %fieldset
         %legend= _('Password')
         .form-group.row
@@ -52,7 +52,7 @@
 
     = render_if_exists 'admin/users/limits', f: f
 
-    %fieldset
+    -#%fieldset
       %legend= _('Profile')
       .form-group.row
         .col-sm-2.col-form-label

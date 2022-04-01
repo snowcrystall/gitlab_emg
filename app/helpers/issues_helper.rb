@@ -114,6 +114,7 @@ module IssuesHelper
   end
 
   def show_new_issue_link?(project)
+    return false
     return false unless project
     return false if project.archived?
 

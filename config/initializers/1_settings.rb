@@ -190,7 +190,8 @@ rescue ArgumentError # no user configured
   '/home/' + Settings.gitlab['user']
 end
 Settings.gitlab['time_zone'] ||= nil
-Settings.gitlab['signup_enabled'] ||= true if Settings.gitlab['signup_enabled'].nil?
+#Settings.gitlab['signup_enabled'] ||= true if Settings.gitlab['signup_enabled'].nil?
+Settings.gitlab['signup_enabled']  = false
 Settings.gitlab['signin_enabled'] ||= true if Settings.gitlab['signin_enabled'].nil?
 Settings.gitlab['restricted_visibility_levels'] = Settings.__send__(:verify_constant_array, Gitlab::VisibilityLevel, Settings.gitlab['restricted_visibility_levels'], [])
 Settings.gitlab['username_changing_enabled'] = true if Settings.gitlab['username_changing_enabled'].nil?
@@ -207,7 +208,7 @@ Settings.gitlab.default_projects_features['wiki']               = true if Settin
 Settings.gitlab.default_projects_features['snippets']           = true if Settings.gitlab.default_projects_features['snippets'].nil?
 Settings.gitlab.default_projects_features['builds']             = true if Settings.gitlab.default_projects_features['builds'].nil?
 Settings.gitlab.default_projects_features['container_registry'] = true if Settings.gitlab.default_projects_features['container_registry'].nil?
-Settings.gitlab.default_projects_features['visibility_level']   = Settings.__send__(:verify_constant, Gitlab::VisibilityLevel, Settings.gitlab.default_projects_features['visibility_level'], Gitlab::VisibilityLevel::PRIVATE)
+Settings.gitlab.default_projects_features['visibility_level']   = Settings.__send__(:verify_constant, Gitlab::VisibilityLevel, Settings.gitlab.default_projects_features['visibility_level'], Gitlab::VisibilityLevel::PUBLIC)
 Settings.gitlab['domain_allowlist'] ||= []
 Settings.gitlab['import_sources'] ||= Gitlab::ImportSources.values
 Settings.gitlab['trusted_proxies'] ||= []
@@ -414,7 +415,7 @@ Settings.mattermost['host'] = nil unless Settings.mattermost.enabled
 # Gravatar
 #
 Settings['gravatar'] ||= Settingslogic.new({})
-Settings.gravatar['enabled']      = true if Settings.gravatar['enabled'].nil?
+Settings.gravatar['enabled']      = false if Settings.gravatar['enabled'].nil?
 Settings.gravatar['plain_url']  ||= 'https://www.gravatar.com/avatar/%{hash}?s=%{size}&d=identicon'
 Settings.gravatar['ssl_url']    ||= 'https://secure.gravatar.com/avatar/%{hash}?s=%{size}&d=identicon'
 Settings.gravatar['host']         = Settings.host_without_www(Settings.gravatar['plain_url'])

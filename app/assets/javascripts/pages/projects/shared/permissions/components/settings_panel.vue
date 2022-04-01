@@ -452,7 +452,7 @@ export default {
       :class="{ 'highlight-changes': highlightChangesClass }"
       class="gl-border-1 gl-border-solid gl-border-t-none gl-border-gray-100 gl-mb-5 gl-py-3 gl-px-7 gl-sm-pr-5 gl-sm-pl-5 gl-bg-gray-10"
     >
-      <project-setting-row
+      <!--<project-setting-row
         ref="issues-settings"
         :help-path="issuesHelpPath"
         :label="$options.i18n.issuesLabel"
@@ -483,7 +483,7 @@ export default {
             data-testid="cve_id_request_toggle"
           />
         </project-setting-row>
-      </project-setting-row>
+      </project-setting-row>-->
       <project-setting-row
         ref="repository-settings"
         :label="$options.i18n.repositoryLabel"
@@ -496,7 +496,7 @@ export default {
           name="project[project_feature_attributes][repository_access_level]"
         />
       </project-setting-row>
-      <div class="project-feature-setting-group gl-pl-7 gl-sm-pl-5">
+     <!--<div class="project-feature-setting-group gl-pl-7 gl-sm-pl-5">
         <project-setting-row
           ref="merge-request-settings"
           :label="$options.i18n.mergeRequestsLabel"
@@ -589,8 +589,8 @@ export default {
             name="project[project_feature_attributes][builds_access_level]"
           />
         </project-setting-row>
-      </div>
-      <project-setting-row
+      </div> -->
+      <!--  <project-setting-row
         v-if="registryAvailable"
         ref="container-registry-settings"
         :help-path="registryHelpPath"
@@ -618,8 +618,8 @@ export default {
           :label="$options.i18n.containerRegistryLabel"
           name="project[project_feature_attributes][container_registry_access_level]"
         />
-      </project-setting-row>
-      <project-setting-row
+      </project-setting-row>-->
+      <!--<project-setting-row
         ref="analytics-settings"
         :label="$options.i18n.analyticsLabel"
         :help-text="s__('ProjectSettings|View project analytics.')"
@@ -708,8 +708,8 @@ export default {
           :options="featureAccessLevelOptions"
           name="project[project_feature_attributes][operations_access_level]"
         />
-      </project-setting-row>
-      <div class="project-feature-setting-group gl-pl-7 gl-sm-pl-5">
+      </project-setting-row>-->
+      <!--<div class="project-feature-setting-group gl-pl-7 gl-sm-pl-5">
         <project-setting-row
           ref="metrics-visibility-settings"
           :label="__('Metrics Dashboard')"
@@ -722,9 +722,9 @@ export default {
             name="project[project_feature_attributes][metrics_dashboard_access_level]"
           />
         </project-setting-row>
-      </div>
+      </div>-->
     </div>
-    <project-setting-row v-if="canDisableEmails" ref="email-settings" class="mb-3">
+    <!--<project-setting-row v-if="canDisableEmails" ref="email-settings" class="mb-3">
       <label class="js-emails-disabled">
         <input :value="emailsDisabled" type="hidden" name="project[emails_disabled]" />
         <input v-model="emailsDisabled" type="checkbox" />
@@ -740,7 +740,7 @@ export default {
         type="hidden"
         name="project[project_setting_attributes][show_default_award_emojis]"
       />
-      <gl-form-checkbox
+       <gl-form-checkbox
         v-model="showDefaultAwardEmojis"
         name="project[project_setting_attributes][show_default_award_emojis]"
       >
@@ -751,6 +751,6 @@ export default {
           )
         }}</template>
       </gl-form-checkbox>
-    </project-setting-row>
+    </project-setting-row>-->
   </div>
 </template>

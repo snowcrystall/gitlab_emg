@@ -9435,7 +9435,7 @@ CREATE TABLE application_settings (
     snowplow_collector_hostname character varying,
     snowplow_cookie_domain character varying,
     web_ide_clientside_preview_enabled boolean DEFAULT false NOT NULL,
-    user_show_add_ssh_key_message boolean DEFAULT true NOT NULL,
+    user_show_add_ssh_key_message boolean DEFAULT false NOT NULL,
     custom_project_templates_group_id integer,
     usage_stats_set_by_user_id integer,
     receive_max_input_size integer,

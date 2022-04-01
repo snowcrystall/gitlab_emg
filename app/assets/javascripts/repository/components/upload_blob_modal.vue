@@ -13,7 +13,7 @@ import createFlash from '~/flash';
 import axios from '~/lib/utils/axios_utils';
 import { ContentTypeMultipartFormData } from '~/lib/utils/headers';
 import { numberToHumanSize } from '~/lib/utils/number_utils';
-import { visitUrl, joinPaths } from '~/lib/utils/url_utility';
+import { visitUrl, joinPaths,refreshCurrentPage } from '~/lib/utils/url_utility';
 import { __ } from '~/locale';
 import { trackFileUploadEvent } from '~/projects/upload_file_experiment_tracking';
 import UploadDropzone from '~/vue_shared/components/upload_dropzone/upload_dropzone.vue';
@@ -26,11 +26,16 @@ import {
 
 const PRIMARY_OPTIONS_TEXT = __('Upload file');
 const MODAL_TITLE = __('Upload New File');
-const REMOVE_FILE_TEXT = __('Remove file');
+const REMOVE_FILE_TEXT = __('Remove');
 const NEW_BRANCH_IN_FORK = __(
   'A new branch will be created in your fork and a new merge request will be started.',
 );
 const ERROR_MESSAGE = __('Error uploading file. Please try again.');
+
+const TABLE_FILE_NAME = __('File Name');
+const TABLE_FILE_SIZE = __('File Size');
+const TABLE_UPLOAD_PROGRESS = __('Progress');
+const TABLE_OPERATION = __('Operation');
 
 export default {
   components: {
@@ -50,6 +55,10 @@ export default {
     TOGGLE_CREATE_MR_LABEL,
     REMOVE_FILE_TEXT,
     NEW_BRANCH_IN_FORK,
+    TABLE_FILE_NAME,
+    TABLE_FILE_SIZE,
+    TABLE_UPLOAD_PROGRESS,
+    TABLE_OPERATION,
   },
   props: {
     modalTitle: {
@@ -91,15 +100,26 @@ export default {
       default: null,
       required: false,
     },
+    singleFileSelection: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    directorySelection: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
   },
   data() {
     return {
       commit: this.commitMessage,
       target: this.targetBranch,
       createNewMr: true,
-      file: null,
-      filePreviewURL: null,
-      fileBinary: null,
+      file: null, // FIXME remove latter
+      filePreviewURL: null, // FIXME remove latter
+      fileBinary: null, // FIXME remove latter
+      files: null,
       loading: false,
     };
   },
@@ -133,10 +153,31 @@ export default {
       return this.canPushCode && this.target !== this.originalBranch;
     },
     formCompleted() {
-      return this.file && this.commit && this.target;
+      return this.files && this.commit && this.target;
     },
   },
   methods: {
+    setFiles(files) {
+      var records = [];
+      for (let i = 0; i < files.length; i++) {
+        var record = {};
+
+        record.file = files[i];
+
+        const fileUurlReader = new FileReader();
+
+        fileUurlReader.readAsDataURL(record.file);
+
+        fileUurlReader.onload = (e) => {
+          record.filePreviewURL = e.target?.result;
+        };
+
+        records.push(record);
+      }
+      this.files = records;
+      console.log('length: ' + this.files.length);
+    },
+    // FIXME remove latter
     setFile(file) {
       this.file = file;
 
@@ -148,14 +189,38 @@ export default {
         this.filePreviewURL = e.target?.result;
       };
     },
+
     removeFile() {
       this.file = null;
       this.filePreviewURL = null;
     },
+    removeSpecifiedFile(file) {
+      if (this.files == null) {
+        return;
+      }
+
+      var index = this.files.findIndex((item) => {
+        if (this.directorySelection) {
+          return item.file.webkitRelativePath == file.file.webkitRelativePath;
+        } else {
+          return item.file.name == file.file.name;
+        }
+      });
+
+      this.files.splice(index, 1);
+
+      if (this.files.length == 0) {
+        this.files = null;
+      }
+    },
     submitForm() {
+      if (this.directorySelection) {
+        return this.uploadDir();
+      }
       return this.replacePath ? this.replaceFile() : this.uploadFile();
     },
     submitRequest(method, url) {
+      
       return axios({
         method,
         url,
@@ -163,15 +228,25 @@ export default {
         headers: {
           ...ContentTypeMultipartFormData,
         },
+        onUploadProgress: (progressEvent) => {
+          var processEvent = progressEvent;
+          console.log('process: ' + JSON.stringify(progressEvent));
+        },
       })
         .then((response) => {
           if (!this.replacePath) {
             trackFileUploadEvent('click_upload_modal_form_submit');
           }
-          visitUrl(response.data.filePath);
+          if (this.directorySelection) {
+            visitUrl(response.data.FilePath);
+          }else{
+            visitUrl(response.data.filePath);
+          }
+		      //refreshCurrentPage()
         })
-        .catch(() => {
+        .catch((error) => {
           this.loading = false;
+		  console.log(error);
           createFlash({ message: ERROR_MESSAGE });
         });
     },
@@ -180,7 +255,12 @@ export default {
       formData.append('branch_name', this.target);
       formData.append('create_merge_request', this.createNewMr);
       formData.append('commit_message', this.commit);
-      formData.append('file', this.file);
+
+      formData.append('dir_commit', this.directorySelection);
+
+      for (let i = 0; i < this.files.length; i++) {
+        formData.append('file', this.files[i].file);
+      }
 
       return formData;
     },
@@ -193,15 +273,23 @@ export default {
     },
     uploadFile() {
       this.loading = true;
-
       const {
         $route: {
           params: { path },
         },
       } = this;
       const uploadPath = joinPaths(this.path, path);
-
       return this.submitRequest('post', uploadPath);
+    },
+    uploadDir() {
+      this.loading = true;
+      const {
+        $route: {
+          params: { path },
+        },
+      } = this;
+      const uploadDirPath = joinPaths(this.path, path);
+      return this.submitRequest('post', uploadDirPath);
     },
   },
   validFileMimetypes: [],
@@ -218,25 +306,38 @@ export default {
     >
       <upload-dropzone
         class="gl-h-200! gl-mb-4"
-        single-file-selection
+        :single-file-selection="singleFileSelection"
+        :directory-selection="directorySelection"
         :valid-file-mimetypes="$options.validFileMimetypes"
-        @change="setFile"
+        @change="setFiles"
       >
-        <div
-          v-if="file"
-          class="card upload-dropzone-card upload-dropzone-border gl-w-full gl-h-full gl-align-items-center gl-justify-content-center gl-p-3"
-        >
-          <img v-if="filePreviewURL" :src="filePreviewURL" class="gl-h-11" />
-          <div>{{ formattedFileSize }}</div>
-          <div>{{ file.name }}</div>
-          <gl-button
-            category="tertiary"
-            variant="confirm"
-            :disabled="loading"
-            @click="removeFile"
-            >{{ $options.i18n.REMOVE_FILE_TEXT }}</gl-button
-          >
-        </div>
+        <table v-if="files" class="upload-dropzone-border">
+          <thead>
+            <tr>
+              <th>{{ $options.i18n.TABLE_FILE_NAME }}</th>
+              <th>{{ $options.i18n.TABLE_FILE_SIZE }}</th>
+              <!--th styles="width: 40px">{{ $options.i18n.TABLE_UPLOAD_PROGRESS }}</th-->
+              <th>{{ $options.i18n.TABLE_OPERATION }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="file in files">
+              <td>{{ directorySelection ? file.file.webkitRelativePath : file.file.name }}</td>
+              <td>{{ file.file.size }}</td>
+              <!--td styles="witdh: 40px"> 0% </td-->
+              <td>
+                <gl-button
+                  category="tertiary"
+                  variant="confirm"
+                  :disabled="loading"
+                  styles="height:26px"
+                  @click="removeSpecifiedFile(file)"
+                  >{{ $options.i18n.REMOVE_FILE_TEXT }}</gl-button
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </upload-dropzone>
       <gl-form-group :label="$options.i18n.COMMIT_LABEL" label-for="commit_message">
         <gl-form-textarea v-model="commit" name="commit_message" :disabled="loading" />
@@ -260,3 +361,37 @@ export default {
     </gl-modal>
   </gl-form>
 </template>
+<style>
+table {
+  border: 1px;
+  border-collapse: collapse;
+  border-radius: 3px;
+  width: 100%;
+  color: #000;
+}
+thead {
+  width: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+tbody {
+  width: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-bottom: 8px;
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 160px;
+}
+th {
+  padding-left: 5px;
+}
+thead,
+tbody tr {
+  display: table;
+  table-layout: fixed;
+  word-break: break-all;
+  width: 100%;
+}
+</style>

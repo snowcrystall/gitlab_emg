@@ -2,8 +2,8 @@
 
 cd $(dirname $0)/..
 app_root=$(pwd)
-sidekiq_pidfile="$app_root/tmp/pids/sidekiq-cluster.pid"
-sidekiq_logfile="$app_root/log/sidekiq.log"
+sidekiq_pidfile="$app_root/../tmp/pids/sidekiq-cluster.pid"
+sidekiq_logfile="$app_root/../log/sidekiq.log"
 gitlab_user=$(ls -l config.ru | awk '{print $3}')
 
 warn()

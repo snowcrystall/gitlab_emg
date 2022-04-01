@@ -9,13 +9,13 @@ module Sidebars
           return false unless can?(context.current_user, :download_code, context.project)
           return false if context.project.empty_repo?
 
-          add_item(files_menu_item)
-          add_item(commits_menu_item)
-          add_item(branches_menu_item)
-          add_item(tags_menu_item)
-          add_item(contributors_menu_item)
-          add_item(graphs_menu_item)
-          add_item(compare_menu_item)
+          #add_item(files_menu_item)
+          #add_item(commits_menu_item)
+          #add_item(branches_menu_item)
+          #add_item(tags_menu_item)
+          #add_item(contributors_menu_item)
+          #add_item(graphs_menu_item)
+          #add_item(compare_menu_item)
 
           true
         end
@@ -48,17 +48,11 @@ module Sidebars
         def sprite_icon
           'doc-text'
         end
+      
 
         private
 
-        def files_menu_item
-          ::Sidebars::MenuItem.new(
-            title: _('Files'),
-            link: project_tree_path(context.project, context.current_ref),
-            active_routes: { controller: %w[tree blob blame edit_tree new_tree find_file] },
-            item_id: :files
-          )
-        end
+        
 
         def commits_menu_item
           ::Sidebars::MenuItem.new(

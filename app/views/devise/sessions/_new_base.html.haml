@@ -9,7 +9,7 @@
     .remember-me
       %label{ for: 'user_remember_me' }
         = f.check_box :remember_me, class: 'remember-me-checkbox'
-        %span Remember me
+        %span= _('Remember me')
       .float-right
         - if unconfirmed_email?
           = link_to _('Resend confirmation email'), new_user_confirmation_path

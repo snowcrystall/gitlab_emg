@@ -56,7 +56,8 @@ module Repositories
 
     def render_ok
       set_workhorse_internal_api_content_type
-      render json: Gitlab::Workhorse.git_http_ok(repository, repo_type, user, action_name)
+      #path = File.join(params[:namespace_id], params[:project_id] || params[:id])
+      render json: Gitlab::Workhorse.git_http_ok(repository, repo_type, user, action_name,params[:id])
     end
 
     def render_403_with_exception(exception)

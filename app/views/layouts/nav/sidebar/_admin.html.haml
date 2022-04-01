@@ -14,12 +14,12 @@
           %span.nav-item-name
             = _('Overview')
         %ul.sidebar-sub-level-items
-          = nav_link(controller: %w(dashboard admin admin/projects users groups jobs runners gitaly_servers cohorts), html_options: { class: "fly-out-top-item" } ) do
+          -#= nav_link(controller: %w(dashboard admin admin/projects users groups jobs runners gitaly_servers cohorts), html_options: {  } ) do
             = link_to admin_root_path do
               %strong.fly-out-top-item-name
                 = _('Overview')
-          %li.divider.fly-out-top-item
-          = nav_link(controller: :dashboard, html_options: {class: 'home'}) do
+          -#%li.divider
+          -#= nav_link(controller: :dashboard, html_options: {class: 'home'}) do
             = link_to admin_root_path, title: _('Overview') do
               %span
                 = _('Dashboard')
@@ -38,17 +38,17 @@
           = nav_link path: 'jobs#index' do
             = link_to admin_jobs_path, title: _('Jobs') do
               %span
-                = _('Jobs')
+                = _('同步状态')
           = nav_link path: ['runners#index', 'runners#show'] do
             = link_to admin_runners_path, title: _('Runners') do
               %span
-                = _('Runners')
-          = nav_link(controller: :gitaly_servers) do
+                = _('同步机')
+          -#= nav_link(controller: :gitaly_servers) do
             = link_to admin_gitaly_servers_path, title: 'Gitaly Servers' do
               %span
                 = _('Gitaly Servers')
 
-      = nav_link(controller: admin_analytics_nav_links) do
+      -#= nav_link(controller: admin_analytics_nav_links) do
         = link_to admin_dev_ops_report_path, data: { qa_selector: 'admin_analytics_link' }, class: 'has-sub-items' do
           .nav-icon-container
             = sprite_icon('chart')
@@ -78,39 +78,39 @@
             = _('Monitoring')
 
         %ul.sidebar-sub-level-items{ data: { qa_selector: 'admin_sidebar_monitoring_submenu_content' } }
-          = nav_link(controller: admin_monitoring_nav_links, html_options: { class: "fly-out-top-item" } ) do
+          -#= nav_link(controller: admin_monitoring_nav_links, html_options: {  } ) do
             = link_to admin_system_info_path do
               %strong.fly-out-top-item-name
                 = _('Monitoring')
-          %li.divider.fly-out-top-item
+          -#%li.divider
           = nav_link(controller: :system_info) do
             = link_to admin_system_info_path, title: _('System Info') do
               %span
                 = _('System Info')
-          = nav_link(controller: :background_migrations) do
+          -#= nav_link(controller: :background_migrations) do
             = link_to admin_background_migrations_path, title: _('Background Migrations') do
               %span
                 = _('Background Migrations')
-          = nav_link(controller: :background_jobs) do
+          -#= nav_link(controller: :background_jobs) do
             = link_to admin_background_jobs_path, title: _('Background Jobs') do
               %span
                 = _('Background Jobs')
-          = nav_link(controller: :health_check) do
+          -#= nav_link(controller: :health_check) do
             = link_to admin_health_check_path, title: _('Health Check') do
               %span
                 = _('Health Check')
-          = nav_link(controller: :requests_profiles) do
+          -#= nav_link(controller: :requests_profiles) do
             = link_to admin_requests_profiles_path, title: _('Requests Profiles') do
               %span
                 = _('Requests Profiles')
-          - if Gitlab::CurrentSettings.current_application_settings.grafana_enabled?
+          -#- if Gitlab::CurrentSettings.current_application_settings.grafana_enabled?
             = nav_link do
               = link_to Gitlab::CurrentSettings.current_application_settings.grafana_url, target: '_blank', title: _('Metrics Dashboard'), rel: 'noopener noreferrer' do
                 %span
                   = _('Metrics Dashboard')
-          = render_if_exists 'layouts/nav/ee/admin/new_monitoring_sidebar'
+          -#= render_if_exists 'layouts/nav/ee/admin/new_monitoring_sidebar'
 
-      = nav_link(controller: :broadcast_messages) do
+      -#= nav_link(controller: :broadcast_messages) do
         = link_to admin_broadcast_messages_path do
           .nav-icon-container
             = sprite_icon('messages')
@@ -122,7 +122,7 @@
               %strong.fly-out-top-item-name
                 = _('Messages')
 
-      = nav_link(controller: [:hooks, :hook_logs]) do
+      -#= nav_link(controller: [:hooks, :hook_logs]) do
         = link_to admin_hooks_path do
           .nav-icon-container
             = sprite_icon('hook')
@@ -134,7 +134,7 @@
               %strong.fly-out-top-item-name
                 = _('System Hooks')
 
-      = nav_link(controller: :applications) do
+      -#= nav_link(controller: :applications) do
         = link_to admin_applications_path do
           .nav-icon-container
             = sprite_icon('applications')
@@ -146,7 +146,7 @@
               %strong.fly-out-top-item-name
                 = _('Applications')
 
-      = nav_link(controller: :abuse_reports) do
+      -#= nav_link(controller: :abuse_reports) do
         = link_to admin_abuse_reports_path do
           .nav-icon-container
             = sprite_icon('slight-frown')
@@ -160,9 +160,9 @@
                 = _('Abuse Reports')
               %span.badge.badge-pill.count.merge_counter.js-merge-counter.fly-out-badge= number_with_delimiter(AbuseReport.count(:all))
 
-      = render_if_exists 'layouts/nav/sidebar/licenses_link'
+      -#= render_if_exists 'layouts/nav/sidebar/licenses_link'
 
-      - if instance_clusters_enabled?
+      -#- if instance_clusters_enabled?
         = nav_link(controller: :clusters) do
           = link_to admin_clusters_path do
             .nav-icon-container
@@ -175,7 +175,7 @@
                 %strong.fly-out-top-item-name
                   = _('Kubernetes')
 
-      - if akismet_enabled?
+      -#- if akismet_enabled?
         = nav_link(controller: :spam_logs) do
           = link_to admin_spam_logs_path do
             .nav-icon-container
@@ -188,11 +188,11 @@
                 %strong.fly-out-top-item-name
                   = _('Spam Logs')
 
-      = render_if_exists 'layouts/nav/sidebar/push_rules_link'
+      -#= render_if_exists 'layouts/nav/sidebar/push_rules_link'
 
-      = render_if_exists 'layouts/nav/ee/admin/geo_sidebar'
+      -#= render_if_exists 'layouts/nav/ee/admin/geo_sidebar'
 
-      = nav_link(controller: :deploy_keys) do
+      -#= nav_link(controller: :deploy_keys) do
         = link_to admin_deploy_keys_path do
           .nav-icon-container
             = sprite_icon('key')
@@ -204,52 +204,52 @@
               %strong.fly-out-top-item-name
                 = _('Deploy Keys')
 
-      = render_if_exists 'layouts/nav/sidebar/credentials_link'
+      -#= render_if_exists 'layouts/nav/sidebar/credentials_link'
 
-      = nav_link(controller: :labels) do
+      -#= nav_link(controller: :labels) do
         = link_to admin_labels_path do
           .nav-icon-container
             = sprite_icon('labels')
           %span.nav-item-name
             = _('Labels')
         %ul.sidebar-sub-level-items.is-fly-out-only
-          = nav_link(controller: :labels, html_options: { class: "fly-out-top-item" } ) do
+          -#= nav_link(controller: :labels, html_options: { } ) do
             = link_to admin_labels_path do
               %strong.fly-out-top-item-name
                 = _('Labels')
 
-      = nav_link(controller: [:application_settings, :integrations, :appearances]) do
+      -#= nav_link(controller: [:application_settings, :integrations, :appearances]) do
         = link_to general_admin_application_settings_path, class: 'has-sub-items' do
           .nav-icon-container
             = sprite_icon('settings')
           %span.nav-item-name.qa-admin-settings-item
             = _('Settings')
 
-        %ul.sidebar-sub-level-items{ data: { qa_selector: 'admin_sidebar_settings_submenu_content' } }
+        %ul.sidebar-sub-level-items.is-fly-out-only{ data: { qa_selector: 'admin_sidebar_settings_submenu_content' } }
           -# This active_nav_link check is also used in `app/views/layouts/admin.html.haml`
-          = nav_link(controller: [:application_settings, :integrations, :appearances], html_options: { class: "fly-out-top-item" } ) do
+          -#= nav_link(controller: [:application_settings, :integrations, :appearances], html_options: {  } ) do
             = link_to general_admin_application_settings_path do
               %strong.fly-out-top-item-name
                 = _('Settings')
-            %li.divider.fly-out-top-item
-            = nav_link(path: 'application_settings#general') do
-              = link_to general_admin_application_settings_path, title: _('General'), class: 'qa-admin-settings-general-item' do
-                %span
-                  = _('General')
+          -#%li.divider
+          = nav_link(path: 'application_settings#general') do
+            = link_to general_admin_application_settings_path, title: _('General'), class: 'qa-admin-settings-general-item' do
+              %span
+                = _('General')
 
-            = render_if_exists 'layouts/nav/sidebar/advanced_search', class: 'qa-admin-settings-advanced-search'
+            -#= render_if_exists 'layouts/nav/sidebar/advanced_search', class: 'qa-admin-settings-advanced-search'
 
-            - if instance_level_integrations?
+            -#- if instance_level_integrations?
               = nav_link(path: ['application_settings#integrations', 'integrations#edit']) do
                 = link_to integrations_admin_application_settings_path, title: _('Integrations'), data: { qa_selector: 'integration_settings_link' } do
                   %span
                     = _('Integrations')
-            = nav_link(path: 'application_settings#repository') do
+            -#= nav_link(path: 'application_settings#repository') do
               = link_to repository_admin_application_settings_path, title: _('Repository'), class: 'qa-admin-settings-repository-item' do
                 %span
                   = _('Repository')
-            - if Gitlab.ee? && License.feature_available?(:custom_file_templates)
-              = nav_link(path: 'application_settings#templates') do
+            -#- if Gitlab.ee? && License.feature_available?(:custom_file_templates)
+            -#= nav_link(path: 'application_settings#templates') do
                 = link_to templates_admin_application_settings_path, title: _('Templates'), class: 'qa-admin-settings-template-item' do
                   %span
                     = _('Templates')
@@ -257,28 +257,29 @@
               = link_to ci_cd_admin_application_settings_path, title: _('CI/CD') do
                 %span
                   = _('CI/CD')
-            - if Feature.enabled?(:serverless_domain)
+          
+            -#- if Feature.enabled?(:serverless_domain)
               = nav_link(path: 'application_settings#operations') do
                 = link_to admin_serverless_domains_path, title: _('Operations') do
                   %span
                     = _('Operations')
-            = nav_link(path: 'application_settings#reporting') do
+            -#= nav_link(path: 'application_settings#reporting') do
               = link_to reporting_admin_application_settings_path, title: _('Reporting') do
                 %span
                   = _('Reporting')
-            = nav_link(path: 'application_settings#metrics_and_profiling') do
+            -#= nav_link(path: 'application_settings#metrics_and_profiling') do
               = link_to metrics_and_profiling_admin_application_settings_path, title: _('Metrics and profiling'), class: 'qa-admin-settings-metrics-and-profiling-item' do
                 %span
                   = _('Metrics and profiling')
-            = nav_link(path: 'application_settings#network') do
+            -#= nav_link(path: 'application_settings#network') do
               = link_to network_admin_application_settings_path, title: _('Network'), data: { qa_selector: 'admin_settings_network_item' } do
                 %span
                   = _('Network')
-            = nav_link(controller: :appearances ) do
+            -#= nav_link(controller: :appearances ) do
               = link_to admin_application_settings_appearances_path do
                 %span
                   = _('Appearance')
-            = nav_link(path: 'application_settings#preferences') do
+            -#= nav_link(path: 'application_settings#preferences') do
               = link_to preferences_admin_application_settings_path, title: _('Preferences'), data: { qa_selector: 'admin_settings_preferences_link' } do
                 %span
                   = _('Preferences')

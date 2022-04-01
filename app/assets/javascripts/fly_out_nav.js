@@ -1,4 +1,4 @@
-import { GlBreakpointInstance as bp } from '@gitlab/ui/dist/utils';
+/*import { GlBreakpointInstance as bp } from '@gitlab/ui/dist/utils';
 import { SIDEBAR_COLLAPSED_CLASS } from './contextual_sidebar';
 
 const HIDE_INTERVAL_TIMEOUT = 300;
@@ -172,7 +172,7 @@ export const subItemsMouseLeave = (relatedTarget) => {
   }
 };
 
-export default () => {
+/*export default () => {
   sidebar = document.querySelector('.nav-sidebar');
 
   if (!sidebar) return;
@@ -202,4 +202,4 @@ export default () => {
   });
 
   document.addEventListener('mousemove', documentMouseMove);
-};
+};*/

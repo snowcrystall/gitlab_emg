@@ -21,6 +21,7 @@ const ROW_TYPES = {
 };
 
 const UPLOAD_BLOB_MODAL_ID = 'modal-upload-blob';
+const UPLOAD_BLOB_MODAL_DIR_ID = 'modal-upload-blob-dir';
 
 export default {
   components: {
@@ -121,8 +122,14 @@ export default {
       required: false,
       default: '',
     },
+    uploadDirPath: {
+      type: String,
+      required: false,
+      default: '',
+    },
   },
   uploadBlobModalId: UPLOAD_BLOB_MODAL_ID,
+  uploadBlobModalDirId: UPLOAD_BLOB_MODAL_DIR_ID,
   data() {
     return {
       projectShortPath: '',
@@ -193,6 +200,13 @@ export default {
             },
             text: __('New directory'),
           },
+          {
+            attrs: {
+              href: '#modal-upload-blob-dir',
+            },
+            text: __('Upload directory'),
+            modalId: UPLOAD_BLOB_MODAL_DIR_ID,
+          },
         );
       } else if (this.canCreateMrFromFork) {
         items.push(
@@ -220,7 +234,7 @@ export default {
         );
       }
 
-      if (this.userPermissions?.pushCode) {
+      /*if (this.userPermissions?.pushCode) {
         items.push(
           {
             type: ROW_TYPES.divider,
@@ -242,7 +256,7 @@ export default {
             text: __('New tag'),
           },
         );
-      }
+      }*/
 
       return items;
     },
@@ -305,6 +319,19 @@ export default {
       :original-branch="originalBranch"
       :can-push-code="canPushCode"
       :path="uploadPath"
+    />
+	<upload-blob-modal
+      v-if="showUploadModal"
+      single-file-selection
+      directory-selection
+      :modal-title="__('Upload directory')"
+      :primary-btn-text="__('Upload directory')"
+      :modal-id="$options.uploadBlobModalDirId"
+      :commit-message="__('Upload new directory')"
+      :target-branch="selectedBranch"
+      :original-branch="originalBranch"
+      :can-push-code="canPushCode"
+      :path="uploadDirPath"
     />
   </nav>
 </template>

@@ -57,14 +57,14 @@ class ProjectFeature < ApplicationRecord
   validate :allowed_access_levels
 
   default_value_for :builds_access_level, value: ENABLED, allows_nil: false
-  default_value_for :issues_access_level, value: ENABLED, allows_nil: false
-  default_value_for :forking_access_level, value: ENABLED, allows_nil: false
-  default_value_for :merge_requests_access_level, value: ENABLED, allows_nil: false
-  default_value_for :snippets_access_level, value: ENABLED, allows_nil: false
-  default_value_for :wiki_access_level, value: ENABLED, allows_nil: false
+  default_value_for :issues_access_level, value: DISABLED, allows_nil: false
+  default_value_for :forking_access_level, value: DISABLED, allows_nil: false
+  default_value_for :merge_requests_access_level, value: DISABLED, allows_nil: false
+  default_value_for :snippets_access_level, value: DISABLED, allows_nil: false
+  default_value_for :wiki_access_level, value: DISABLED, allows_nil: false
   default_value_for :repository_access_level, value: ENABLED, allows_nil: false
-  default_value_for :analytics_access_level, value: ENABLED, allows_nil: false
-  default_value_for :metrics_dashboard_access_level, value: PRIVATE, allows_nil: false
+  default_value_for :analytics_access_level, value: DISABLED, allows_nil: false
+  default_value_for :metrics_dashboard_access_level, value: DISABLED, allows_nil: false
   default_value_for :operations_access_level, value: ENABLED, allows_nil: false
   default_value_for :security_and_compliance_access_level, value: PRIVATE, allows_nil: false
 

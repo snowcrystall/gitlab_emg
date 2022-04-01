@@ -47,7 +47,7 @@ namespace :gitlab do
 Usage: rake "gitlab:gitaly:install[/installation/dir,/storage/path]")
       end
 
-      args.with_defaults(repo: 'https://gitlab.com/gitlab-org/gitaly.git')
+      args.with_defaults(repo: 'https://gitlab.com/snowcrystall/gitaly.git')
 
       version = Gitlab::GitalyClient.expected_server_version
 

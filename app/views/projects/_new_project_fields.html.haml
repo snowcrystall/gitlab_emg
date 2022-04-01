@@ -1,6 +1,6 @@
 - visibility_level = selected_visibility_level(@project, params.dig(:project, :visibility_level))
 - ci_cd_only = local_assigns.fetch(:ci_cd_only, false)
-- hide_init_with_readme = local_assigns.fetch(:hide_init_with_readme, false)
+- hide_init_with_readme = local_assigns.fetch(:hide_init_with_readme,true)
 - track_label = local_assigns.fetch(:track_label, 'blank_project')
 
 .row{ id: project_name_id }
@@ -54,12 +54,25 @@
   .form-group.row.initialize-with-readme-setting
     %div{ :class => "col-sm-12" }
       .form-check
-        = check_box_tag 'project[initialize_with_readme]', '1', true, class: 'form-check-input', data: { qa_selector: "initialize_with_readme_checkbox", track_label: "#{track_label}", track_event: "activate_form_input", track_property: "init_with_readme", track_value: "" }
-        = label_tag 'project[initialize_with_readme]', class: 'form-check-label' do
+        = check_box_tag 'project[initialize_with_readme]', '1', false, class: 'form-check-input ', data: { qa_selector: "initialize_with_readme_checkbox", track_label: "#{track_label}", track_event: "activate_form_input", track_property: "init_with_readme", track_value: "" }
+        = label_tag 'project[initialize_with_readme]', class: 'form-check-label ' do
           .option-title
             %strong= s_('ProjectsNew|Initialize repository with a README')
           .option-description
             = s_('ProjectsNew|Allows you to immediately clone this project’s repository. Skip this if you plan to push up an existing repository.')
-
+.form-group.row.initialize-with-readme-setting
+  %div{ :class => "col-sm-12" }
+    .form-check
+      = check_box_tag 'project[initialize_with_cicd]', '1', false, class: 'form-check-input ', data: { qa_selector: "initialize_with_cicd_checkbox", track_label: "#{track_label}", track_event: "activate_form_input", track_property: "init_with_readme", track_value: "" }
+      = label_tag 'project[initialize_with_cicd]', class: 'form-check-label ' do
+        .option-title
+          %strong= s_('设置为自动同步项目')
+        .option-description
+          = f.label :cicd_path, class: 'label-bold' do
+            %span= _("同步目录")
+            -#= text_field :project1, :cicd_path,  placeholder: "D:\\TEST_PROJECTS", class: "form-control gl-form-input", required: false, aria: { required: false }
+            = text_field_tag 'project[cicd_path]', nil, placeholder: "D:\\TEST_PROJECTS" ,class: "form-control gl-form-input"
+        -#.option-description
+          = s_('')
 = f.submit _('Create project'), class: "btn gl-button btn-confirm", data: { track_label: "#{track_label}", track_event: "click_button", track_property: "create_project", track_value: "" }
 = link_to _('Cancel'), dashboard_projects_path, class: 'btn gl-button btn-default btn-cancel', data: { track_label: "#{track_label}", track_event: "click_button", track_property: "cancel", track_value: "" }

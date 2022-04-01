@@ -41,10 +41,10 @@ module Gitlab
 
       def options
         {
-          "Guest"      => GUEST,
-          "Reporter"   => REPORTER,
-          "Developer"  => DEVELOPER,
-          "Maintainer" => MAINTAINER
+          "访客"      => GUEST,
+          #"Reporter"   => REPORTER,
+          "编辑者"  => DEVELOPER,
+          "维护者" => MAINTAINER
         }
       end
 

@@ -17,7 +17,7 @@
   .sidebar-top-level-items > li {
     .sidebar-sub-level-items {
       &:not(.flyout-list) {
-        display: none;
+        display: block;
       }
     }
   }
@@ -377,7 +377,7 @@
 
 .sidebar-sub-level-items {
   @include gl-py-0;
-  @include gl-display-none;
+  //@include gl-display-none;
 
   &:not(.fly-out-list) {
     li > a {

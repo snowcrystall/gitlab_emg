@@ -2,18 +2,18 @@
 - page_title _("General")
 - @content_class = "limit-container-width" unless fluid_layout
 
-%section.settings.as-visibility-access.no-animate#js-visibility-settings{ class: ('expanded' if expanded_by_default?) }
+%section.settings.as-visibility-access.no-animate#js-visibility-settings{ class: ('expanded' if !expanded_by_default?) }
   .settings-header
     %h4
       = _('Visibility and access controls')
     %button.btn.gl-button.btn-default.js-settings-toggle{ type: 'button' }
-      = expanded_by_default? ? _('Collapse') : _('Expand')
+      = !expanded_by_default? ? _('Collapse') : _('Expand')
     %p
       = _('Set default and restrict visibility levels. Configure import sources and git access protocol.')
   .settings-content
     = render 'visibility_and_access'
 
-%section.settings.as-account-limit.no-animate#js-account-settings{ class: ('expanded' if expanded_by_default?), data: { qa_selector: 'account_and_limit_settings_content' } }
+-#%section.settings.as-account-limit.no-animate#js-account-settings{ class: ('expanded' if expanded_by_default?), data: { qa_selector: 'account_and_limit_settings_content' } }
   .settings-header
     %h4
       = _('Account and limit')
@@ -24,7 +24,7 @@
   .settings-content
     = render 'account_and_limit'
 
-%section.settings.as-diff-limits.no-animate#js-merge-request-settings{ class: ('expanded' if expanded_by_default?) }
+-#%section.settings.as-diff-limits.no-animate#js-merge-request-settings{ class: ('expanded' if expanded_by_default?) }
   .settings-header
     %h4
       = _('Diff limits')
@@ -35,7 +35,7 @@
   .settings-content
     = render 'diff_limits'
 
-%section.settings.as-signup.no-animate#js-signup-settings{ class: ('expanded' if expanded_by_default?), data: { qa_selector: 'sign_up_restrictions_settings_content' } }
+-#%section.settings.as-signup.no-animate#js-signup-settings{ class: ('expanded' if expanded_by_default?), data: { qa_selector: 'sign_up_restrictions_settings_content' } }
   .settings-header
     %h4
       = _('Sign-up restrictions')
@@ -46,7 +46,7 @@
   .settings-content
     = render 'signup'
 
-%section.settings.as-signin.no-animate#js-signin-settings{ class: ('expanded' if expanded_by_default?) }
+-#%section.settings.as-signin.no-animate#js-signin-settings{ class: ('expanded' if expanded_by_default?) }
   .settings-header
     %h4
       = _('Sign-in restrictions')
@@ -58,7 +58,7 @@
   .settings-content
     = render 'signin'
 
-%section.settings.as-terms.no-animate#js-terms-settings{ class: ('expanded' if expanded_by_default?) }
+-#%section.settings.as-terms.no-animate#js-terms-settings{ class: ('expanded' if expanded_by_default?) }
   .settings-header
     %h4
       = _('Terms of Service and Privacy Policy')
@@ -70,9 +70,9 @@
   .settings-content
     = render 'terms'
 
-= render 'admin/application_settings/external_authorization_service_form', expanded: expanded_by_default?
+-#= render 'admin/application_settings/external_authorization_service_form', expanded: expanded_by_default?
 
-%section.settings.as-terminal.no-animate#js-terminal-settings{ class: ('expanded' if expanded_by_default?) }
+-#%section.settings.as-terminal.no-animate#js-terminal-settings{ class: ('expanded' if expanded_by_default?) }
   .settings-header
     %h4
       = _('Web terminal')
@@ -83,7 +83,7 @@
   .settings-content
     = render 'terminal'
 
-%section.settings.no-animate#js-web-ide-settings{ class: ('expanded' if expanded_by_default?) }
+-#%section.settings.no-animate#js-web-ide-settings{ class: ('expanded' if expanded_by_default?) }
   .settings-header
     %h4
       = _('Web IDE')
@@ -106,14 +106,14 @@
               = s_('Preview JavaScript projects in the Web IDE with CodeSandbox Live Preview. %{link_start}Learn more.%{link_end} ').html_safe % { link_start: link_start, link_end: '</a>'.html_safe }
       = f.submit _('Save changes'), class: "gl-button btn btn-confirm"
 
-= render_if_exists 'admin/application_settings/maintenance_mode_settings_form'
-= render 'admin/application_settings/gitpod'
-= render 'admin/application_settings/kroki'
-= render 'admin/application_settings/mailgun'
-= render 'admin/application_settings/plantuml'
-= render 'admin/application_settings/sourcegraph'
-= render_if_exists 'admin/application_settings/slack'
-= render 'admin/application_settings/third_party_offers'
-= render 'admin/application_settings/snowplow'
-= render 'admin/application_settings/eks'
-= render 'admin/application_settings/floc'
+-#= render_if_exists 'admin/application_settings/maintenance_mode_settings_form'
+-#= render 'admin/application_settings/gitpod'
+-#= render 'admin/application_settings/kroki'
+-#= render 'admin/application_settings/mailgun'
+-#= render 'admin/application_settings/plantuml'
+-#= render 'admin/application_settings/sourcegraph'
+-#= render_if_exists 'admin/application_settings/slack'
+-#= render 'admin/application_settings/third_party_offers'
+-#= render 'admin/application_settings/snowplow'
+-#= render 'admin/application_settings/eks'
+-#= render 'admin/application_settings/floc'

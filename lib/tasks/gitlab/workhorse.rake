@@ -25,8 +25,8 @@ namespace :gitlab do
       # README explaining what is going on. See:
       # https://gitlab.com/gitlab-org/gitlab-workhorse/tree/workhorse-move-notice
       #
-      args.with_defaults(repo: 'https://gitlab.com/gitlab-org/gitlab-workhorse.git')
-      checkout_or_clone_version(version: 'workhorse-move-notice', repo: args.repo, target_dir: args.dir, clone_opts: %w[--depth 1])
+      #args.with_defaults(repo: 'https://gitlab.com/gitlab-org/gitlab-workhorse.git')
+      #checkout_or_clone_version(version: 'workhorse-move-notice', repo: args.repo, target_dir: args.dir, clone_opts: %w[--depth 1])
 
       Gitlab::SetupHelper::Workhorse.compile_into(args.dir)
     end

@@ -4,6 +4,7 @@ module UploadsActions
   extend ActiveSupport::Concern
   include Gitlab::Utils::StrongMemoize
   include SendFileUpload
+  
 
   UPLOAD_MOUNTS = %w(avatar attachment file logo header_logo favicon).freeze
 
@@ -28,7 +29,7 @@ module UploadsActions
       end
     end
   end
-
+  
   # This should either
   #   - send the file directly
   #   - or redirect to its URL

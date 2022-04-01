@@ -1,3 +1,5 @@
+
+
 = form_for [@project], html: { multipart: true, class: "edit-project js-general-settings-form" }, authenticity_token: true do |f|
   %input{ name: 'update_section', type: 'hidden', value: 'js-general-settings' }
 
@@ -36,5 +38,22 @@
     - if @project.avatar?
       %hr
       = link_to _('Remove avatar'), project_avatar_path(@project), data: { confirm: _('Avatar will be removed. Are you sure?')}, method: :delete, class: 'gl-button btn btn-danger-secondary'
-
+  %hr
+  .form-group.gl-mt-3.gl-mb-3.gl-ml-3.col-md-9
+    - is_set_cicd = true if  @project.variables.length() > 0
+    = check_box_tag 'project[initialize_with_cicd]', '1', is_set_cicd, class: 'form-check-input ' 
+    = label_tag 'project[initialize_with_cicd]', class: 'form-check-label ' do
+      .option-title
+        %strong= s_('设置为自动同步项目')
+      .option-description
+        = f.label :cicd_path, class: 'label-bold' do
+          %span= _("同步目录")
+          -#= text_field :project1, :cicd_path,  placeholder: "D:\\TEST_PROJECTS", class: "form-control gl-form-input", required: false, aria: { required: false }
+          - @project.variables.each do |variable|
+            - variable_value = variable&.value
+            = text_field_tag 'project[cicd_path]', nil, placeholder: variable_value , value:variable_value, class: "form-control gl-form-input"
+            = f.hidden_field :ci_cd_variable_id, value: variable&.id
+          - if !is_set_cicd
+            = text_field_tag 'project[cicd_path]', nil, placeholder: "D:\\TEST_PROJECTS" , value:"D:\\TEST_PROJECTS", class: "form-control gl-form-input"
+          
   = f.submit _('Save changes'), class: "gl-button btn btn-confirm gl-mt-6", data: { qa_selector: 'save_naming_topics_avatar_button' }

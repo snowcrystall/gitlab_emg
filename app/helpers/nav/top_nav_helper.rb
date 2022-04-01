@@ -74,20 +74,20 @@ module Nav
         )
       end
 
-      if explore_nav_link?(:snippets)
-        builder.add_primary_menu_item_with_shortcut(
-          active: active_nav_link?(controller: :snippets),
-          href: explore_snippets_path,
-          **snippets_menu_item_attrs
-        )
-      end
+      #if explore_nav_link?(:snippets)
+      #  builder.add_primary_menu_item_with_shortcut(
+      #    active: active_nav_link?(controller: :snippets),
+      #    href: explore_snippets_path,
+      #    **snippets_menu_item_attrs
+      #  )
+      #end
 
-      builder.add_secondary_menu_item(
-        id: 'help',
-        title: _('Help'),
-        icon: 'question-o',
-        href: help_path
-      )
+      #builder.add_secondary_menu_item(
+      #  id: 'help',
+      #  title: _('Help'),
+      #  icon: 'question-o',
+      #  href: help_path
+      #)
     end
 
     def build_view_model(builder:, project:, group:)
@@ -267,7 +267,7 @@ module Nav
       builder.add_primary_menu_item(id: 'your', title: _('Your projects'), href: dashboard_projects_path)
       builder.add_primary_menu_item(id: 'starred', title: _('Starred projects'), href: starred_dashboard_projects_path)
       builder.add_primary_menu_item(id: 'explore', title: _('Explore projects'), href: explore_root_path)
-      builder.add_secondary_menu_item(id: 'create', title: _('Create new project'), href: new_project_path)
+      builder.add_secondary_menu_item(id: 'create', title: _('Create new project'), href: new_project_path+"#blank_project")
       builder.build
     end
 
@@ -278,7 +278,7 @@ module Nav
       builder.add_primary_menu_item(id: 'explore', title: _('Explore groups'), href: explore_groups_path)
 
       if current_user.can_create_group?
-        builder.add_secondary_menu_item(id: 'create', title: _('Create group'), href: new_group_path)
+        builder.add_secondary_menu_item(id: 'create', title: _('Create group'), href: new_group_path+"#create-group-pane")
       end
 
       builder.build

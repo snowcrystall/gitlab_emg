@@ -13,7 +13,8 @@
           = _("GitLab will inform you if a new version is available.")
           = _("%{link_start}Learn more%{link_end} about what information is shared with GitLab Inc.").html_safe % { link_start: "<a href='#{help_page_path("user/admin_area/settings/usage_statistics", anchor: "version-check")}'>".html_safe, link_end: '</a>'.html_safe }
     .form-group
-      - can_be_configured = @application_setting.usage_ping_can_be_configured?
+      -#- can_be_configured = @application_setting.usage_ping_can_be_configured?
+      - can_be_configured = false
       .form-check
         = f.check_box :usage_ping_enabled, disabled: !can_be_configured, class: 'form-check-input'
         = f.label :usage_ping_enabled, class: 'form-check-label' do

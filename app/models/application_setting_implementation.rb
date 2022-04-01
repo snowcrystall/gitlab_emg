@@ -188,7 +188,7 @@ module ApplicationSettingImplementation
         usage_stats_set_by_user_id: nil,
         user_default_external: false,
         user_default_internal_regex: nil,
-        user_show_add_ssh_key_message: true,
+        user_show_add_ssh_key_message: false,
         valid_runner_registrars: VALID_RUNNER_REGISTRAR_TYPES,
         wiki_page_max_content_bytes: 50.megabytes,
         container_registry_delete_tags_service_timeout: 250,
