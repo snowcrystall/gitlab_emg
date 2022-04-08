@@ -13,7 +13,7 @@
 
 = render "home_panel"
 
-- if can?(current_user, :download_code, @project) && @project.repository_languages.present?
+-#- if can?(current_user, :download_code, @project) && @project.repository_languages.present?
   = repository_languages_bar(@project.repository_languages)
 
 = render "archived_notice", project: @project

@@ -6,10 +6,7 @@ module Sidebars
       class ProjectInformationMenu < ::Sidebars::Menu
         override :configure_menu_items
         def configure_menu_items
-          add_item(files_menu_item)
-          add_item(commits_menu_item)
-          #add_item(tags_menu_item)
-          #add_item(activity_menu_item)
+          add_item(activity_menu_item)
           #add_item(labels_menu_item)
           add_item(members_menu_item)
 
@@ -42,23 +39,7 @@ module Sidebars
         end
 
         private
-        def files_menu_item
-          ::Sidebars::MenuItem.new(
-            title: _('Files'),
-            link: project_tree_path(context.project, context.current_ref),
-            active_routes: { controller: %w[tree blob blame edit_tree new_tree find_file] },
-            item_id: :files
-          )
-        end
-        def commits_menu_item
-          ::Sidebars::MenuItem.new(
-            title: _('Commits'),
-            link: project_commits_path(context.project, context.current_ref),
-            active_routes: { controller: %w(commit commits) },
-            item_id: :commits,
-            container_html_options: { id: 'js-onboarding-commits-link' }
-          )
-        end
+
         def activity_menu_item
           ::Sidebars::MenuItem.new(
             title: _('Activity'),
